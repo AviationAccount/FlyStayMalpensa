@@ -61,52 +61,15 @@
             padding-bottom: 1rem;
             margin-top: 1rem;
         }
-        
-        /* NUOVO: Stile per la sezione Hero fissa a tutto schermo e l'immagine */
-        #hero-section {
-            /* 80vh: circa l'80% dell'altezza dello schermo, un buon compromesso visivo */
-            min-height: 80vh; 
-            /* Rende l'elemento non scrollabile internamente */
-            overflow: hidden; 
-        }
-
-        #hero-section .hero-image {
-            /* Assicura che l'immagine sia in posizione assoluta rispetto alla sezione */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.60;
-            /* Per posizionare l'immagine sotto i contenuti del testo */
-            z-index: 1; 
-        }
-
-        /* NUOVO: Aumenta lo z-index dell'header per farlo stare sopra l'immagine hero */
-        header {
-            z-index: 60; 
-        }
-
-        /* Miglioramento Mobile - Rende il titolo più gestibile su schermi piccoli */
-        @media (max-width: 640px) {
-            #hero-section h1 {
-                font-size: 3rem; /* 48px, equivalente a text-5xl di Tailwind */
-            }
-            #hero-section p {
-                font-size: 1.125rem; /* 18px, equivalente a text-lg di Tailwind */
-            }
-        }
-
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 relative">
 
-    <header class="sticky top-0 z-60 bg-white shadow-md">
+    <header class="sticky top-0 z-50 bg-white shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div class="text-2xl font-bold text-sky-600">FlyStay</div>
-            <div class="hidden sm:flex items-center space-x-4"> 
-                <a href="#featured-apartments-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_apartments">Appartamenti</a>
+            <div class="flex items-center space-x-4">
+                <a href="#apartments-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_apartments">Appartamenti</a>
                 <a href="#about-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_about">Chi Siamo</a>
                 <a href="#contact-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_contact">Contatti</a>
                 
@@ -115,20 +78,14 @@
                     <button id="lang-en" class="lang-button bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-2 rounded transition duration-300">EN</button>
                 </div>
             </div>
-             <button class="sm:hidden text-gray-600 hover:text-sky-600">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                 </svg>
-            </button>
         </nav>
     </header>
 
     <main>
-        <section id="hero-section" class="relative bg-gray-900 min-h-[80vh] flex items-center justify-center text-center overflow-hidden">
+        <section class="relative bg-gray-900 h-[60vh] flex items-center justify-center text-center overflow-hidden">
             <img src="https://images.unsplash.com/photo-1560448204-6f17c3741639?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                alt="Modern apartment interior" 
-                class="hero-image"> 
-            
+                 alt="Modern apartment interior" 
+                 class="absolute inset-0 w-full h-full object-cover opacity-60">
             <div class="relative z-10 p-6">
                 <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-4 drop-shadow-lg" data-translate="hero_title">FlyStay Malpensa</h1>
                 <p class="text-xl md:text-2xl text-gray-200 mb-8 drop-shadow-md" data-translate="hero_subtitle">Il tuo soggiorno perfetto vicino all'aeroporto di Malpensa.</p>
@@ -159,7 +116,8 @@
                     </div>
             </div>
         </section>
-<section id="about-section" class="py-16 bg-white">
+
+        <section id="about-section" class="py-16 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl font-bold text-center text-slate-800 mb-8" data-translate="about_title">Chi Siamo</h2>
                 <div class="max-w-4xl mx-auto text-lg text-gray-600 space-y-4">
@@ -173,7 +131,7 @@
         <section id="reviews-section" class="py-16 bg-sky-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl font-bold text-center text-slate-800 mb-10" data-translate="reviews_title">Dicono di Noi</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> 
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
                         <p class="text-gray-600 italic mb-4" data-translate="review_text_1">Soggiorno fantastico! L'appartamento era pulitissimo e molto confortevole. Perfetto per chi ha bisogno di un punto d'appoggio vicino Malpensa.</p>
                         <p class="font-semibold text-slate-700" data-translate="review_user_1_name">Marco Rossi</p>
@@ -197,7 +155,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h2 class="text-3xl font-bold text-slate-800 mb-4" data-translate="contact_title">Contatti Generali</h2>
                 <p class="text-lg text-gray-600 mb-8" data-translate="contact_text">Hai domande o hai bisogno di assistenza generale? Non esitare a contattarci!</p>
-                 <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8"> 
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
                     <div class="flex items-center text-xl text-slate-700">
                         <span class="font-semibold mr-2" data-translate="contact_email">Email:</span>
                         <a href="mailto:info@flystaymalpensa.com" class="text-sky-600 hover:text-sky-800 font-medium">info@flystaymalpensa.com</a>
@@ -210,7 +168,8 @@
             </div>
         </section>
     </main>
-<footer class="bg-gray-800 text-white py-8">
+
+    <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p class="mb-4">© 2024 FlyStay Malpensa. <span data-translate="footer_rights">Tutti i diritti riservati.</span></p>
             <div class="space-x-4">
@@ -228,8 +187,8 @@
     
     <div id="apartment-modal" class="fixed inset-0 z-[100] bg-black bg-opacity-75 flex items-center justify-center hidden transition-opacity duration-300" onclick="if(event.target === this) closeApartmentModal()">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4 transform transition-all duration-300 scale-95 opacity-0" 
-            style="transition: transform 0.3s ease-out, opacity 0.3s ease-out;" 
-            data-current-apartment-id="">
+             style="transition: transform 0.3s ease-out, opacity 0.3s ease-out;" 
+             data-current-apartment-id="">
             
             <div class="sticky top-0 bg-white p-4 border-b rounded-t-xl flex justify-between items-start z-10">
                 <div>
@@ -244,10 +203,10 @@
             </div>
 
             <div class="p-6 space-y-8">
-                <div id="modal-image-gallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4"> 
+                <div id="modal-image-gallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> 
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
                         <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_description_it_title">Descrizione (Italiano):</h3>
                         <p id="modal-description-it" class="text-gray-600 leading-relaxed"></p>
@@ -288,7 +247,7 @@
                             <span data-translate="contact_email_label">Email:</span> 
                             <a id="owner-email" href="" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank"></a>
                         </p>
-                        <p class="text-lg font-semibold text-gray-700">
+                         <p class="text-lg font-semibold text-gray-700">
                             <span data-translate="contact_phone_label">Telefono:</span> 
                             <a id="owner-phone" href="" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank"></a>
                         </p>
@@ -504,314 +463,334 @@
                                 }
                                 // Toggle (accendi/spegni) lo stato delle virgolette
                                 inQuotes = !inQuotes;
-                                // Non includere le virgolette di apertura/chiusura
+                                // Non includere le virgolette di apertura/chiusura nel contenuto del campo
                                 continue; 
                             }
 
                             if (char === ',' && !inQuotes) {
+                                // Trovata una virgola fuori dalle virgolette: il campo è completo
                                 values.push(currentField.trim());
                                 currentField = '';
                             } else {
+                                // Aggiungi il carattere al campo corrente
                                 currentField += char;
                             }
                         }
-                        // Aggiungi l'ultimo campo
-                        values.push(currentField.trim()); 
-                        
-                        // Mappa i valori con gli headers, assicurando che ci siano abbastanza valori per tutti gli headers
-                        headers.forEach((header, index) => {
-                            apartment[header] = values[index] !== undefined ? values[index] : '';
+                        // Aggiungi l'ultimo campo dopo la fine della riga
+                        values.push(currentField.trim());
+
+                        // Mappa i valori agli header
+                        headers.forEach((header, i) => {
+                            // Assegna il valore, usando una stringa vuota se non c'è
+                            apartment[header] = values[i] !== undefined ? values[i] : ''; 
                         });
 
+                        // **LOGICA PREMIUM (Conversione robusta TRUE/FALSE)**
+                        apartment.PREMIUM = (apartment.PREMIUM && apartment.PREMIUM.toLowerCase() === 'true');
+                        
                         return apartment;
-                    }).filter(apartment => apartment.Nome && apartment.Immagini); // Filtra righe vuote o senza nome/immagine
+                    });
                 }
-                
-                renderApartments();
+                // --- FINE ALGORITMO DI PARSING CSV PIÙ ROBUSTO ---
+
+                renderFeaturedApartments();
+                renderApartmentCards();
 
             } catch (error) {
-                console.error("Errore nel caricamento dei dati:", error);
-                loadingIndicator.textContent = "Errore nel caricamento dei dati. Riprova più tardi.";
+                console.error("Errore durante il recupero dei dati da Google Sheets:", error);
+                noApartmentsMessage.textContent = "Impossibile caricare i dati degli appartamenti. Si prega di riprovare più tardi.";
+                noApartmentsMessage.classList.remove('hidden');
             } finally {
                 loadingIndicator.classList.add('hidden');
             }
         }
 
-        // --- FUNZIONE DI RENDERING ---
-        function renderApartments() {
-            apartmentsContainer.innerHTML = '';
-            featuredApartmentsContainer.innerHTML = '';
+        function setLanguage(lang) {
+            currentLang = lang;
+            applyTranslations();
+            renderFeaturedApartments(); 
+            renderApartmentCards(); 
             
-            const featuredApartments = apartmentsData.filter(app => app['In Evidenza'] === 'Sì');
-            const regularApartments = apartmentsData.filter(app => app['In Evidenza'] !== 'Sì');
-
-            // Render Featured Apartments
-            if (featuredApartments.length > 0) {
-                noFeaturedMessage.classList.add('hidden');
-                featuredApartments.forEach(apartment => {
-                    featuredApartmentsContainer.appendChild(createApartmentCard(apartment, true));
-                });
-            } else {
-                noFeaturedMessage.classList.remove('hidden');
-            }
-
-            // Render Regular Apartments
-            if (regularApartments.length > 0) {
-                noApartmentsMessage.classList.add('hidden');
-                regularApartments.forEach(apartment => {
-                    apartmentsContainer.appendChild(createApartmentCard(apartment, false));
-                });
-            } else {
-                 if (featuredApartments.length === 0) {
-                    noApartmentsMessage.classList.add('hidden'); // Nascondi anche qui se non ci sono proprio appartamenti
+            // Update active language button styles
+            document.querySelectorAll('.lang-button').forEach(button => {
+                if (button.id === `lang-${lang}`) {
+                    button.classList.remove('bg-gray-600');
+                    button.classList.add('bg-sky-500');
                 } else {
-                     noApartmentsMessage.classList.remove('hidden'); // Mostra solo se ci sono featured ma non regular
+                    button.classList.remove('bg-sky-500');
+                    button.classList.add('bg-gray-600');
+                }
+            });
+
+            // If modal is open, update its content
+            if (!apartmentModal.classList.contains('hidden')) {
+                const currentApartmentId = apartmentModal.dataset.currentApartmentId;
+                const apartment = apartmentsData.find(apt => apt.ID === currentApartmentId);
+                if (apartment) {
+                    showApartmentDetails(apartment, false); // Pass false to avoid showing the modal again
                 }
             }
         }
 
-        // --- CREAZIONE CARD APPARTAMENTO ---
-        function createApartmentCard(apartment, isFeatured) {
-            const card = document.createElement('div');
-            card.className = 'bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 relative';
-            card.setAttribute('data-apartment-id', apartment.ID);
+        function applyTranslations() {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
+            // Update button text and labels explicitly
+            showContactBtn.textContent = translations[currentLang].modal_show_contact;
+            document.querySelector('#contact-info-box [data-translate="contact_owner_info"]').textContent = translations[currentLang].contact_owner_info;
+            // Questi selettori sono aggiornati in showApartmentDetails, ma forziamo qui in caso di modale aperto
+            if (!apartmentModal.classList.contains('hidden')) {
+                document.querySelector('#owner-email').previousElementSibling.textContent = translations[currentLang].contact_email_label;
+                document.querySelector('#owner-phone').previousElementSibling.textContent = translations[currentLang].contact_phone_label;
+            }
+        }
 
-            const images = apartment.Immagini.split(',').map(img => img.trim()).filter(img => img);
-            const coverImage = images.length > 0 ? images[0] : 'https://via.placeholder.com/600x400?text=Immagine+Non+Disponibile';
-
-            // Prepara i dati del prezzo e della disponibilità
-            const priceText = apartment.Prezzo ? `€${apartment.Prezzo} / notte*` : translations[currentLang].not_specified;
-            const availabilityClass = apartment.Disponibile === 'Sì' ? 'text-green-600' : 'text-red-500';
-            const availabilityText = apartment.Disponibile === 'Sì' 
-                ? translations[currentLang].contact_for_availability_card 
-                : '<span class="text-red-500 font-bold">Non disponibile</span>';
-
-            card.innerHTML = `
-                <div class="relative h-56">
-                    <img src="${coverImage}" alt="${apartment.Nome}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black bg-opacity-10"></div>
-                    ${isFeatured ? `
-                        <div class="premium-badge">
-                            <svg class="medal-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.81-7-7.93 0-.62.08-1.21.21-1.79l5.8 5.8 1-1V17h2v2h-1.3l-1.63-1.63c-.15.03-.3.07-.47.1-.42.08-.85.12-1.27.12zM18.89 12c0 4.29-3.32 7.79-7.5 8.16l1.76-1.76c.72-.72 1.88-.72 2.6 0l2.6 2.6c1.11-1.39 1.83-3.13 2-5zm-1.89-6h-2v2h2V6zM12 4c2.81 0 5.37 1.25 7.08 3.25l-2.6 2.6c-.72.72-1.88.72-2.6 0l-1.76-1.76C12.15 8.08 11.08 8 10 8s-2.15.08-3.08.24l-1.76 1.76c-1.55 1.55-2.26 3.73-2.26 5.86 0 .68.1 1.34.28 1.97L12 12l.9-1.9L12 9l2-2 3.08 3.08C17.7 7.15 15.08 4 12 4z"/>
-                            </svg>
-                            <span data-translate="premium_badge_text">${translations[currentLang].premium_badge_text}</span>
-                        </div>
-                    ` : ''}
+        // Funzione per generare il badge Medaglia/In Evidenza
+        function getPremiumBadgeHTML() {
+            return `
+                <div class="premium-badge">
+                    <svg class="medal-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 15.39L10 14.98l-3.41 2.41 1-4.09-3.17-2.77 4.14-.35L12 6l1.44 4.19 4.14.35-3.17 2.77 1 4.09z"/>
+                    </svg>
+                    ${translations[currentLang].premium_badge_text}
                 </div>
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">${apartment.Nome}</h3>
-                    <div class="flex items-center text-lg text-sky-600 font-semibold mb-4">
-                        <svg class="map-icon text-sky-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                        </svg>
-                        <span>${apartment.Città} (${apartment.Distanza} km)</span>
+            `;
+        }
+
+        // Funzioni per renderizzare gli appartamenti
+        function renderFeaturedApartments() {
+            featuredApartmentsContainer.innerHTML = '';
+            // Filtra solo gli appartamenti con PREMIUM === true (booleano)
+            const featuredApartments = apartmentsData.filter(apt => apt.PREMIUM);
+
+            if (featuredApartments.length === 0) {
+                noFeaturedMessage.classList.remove('hidden');
+            } else {
+                noFeaturedMessage.classList.add('hidden');
+                featuredApartments.forEach(apartment => {
+                    featuredApartmentsContainer.appendChild(createApartmentCard(apartment, true));
+                });
+            }
+        }
+
+        function renderApartmentCards() {
+            apartmentsContainer.innerHTML = '';
+            // Filtra solo gli appartamenti con PREMIUM === false (booleano)
+            const standardApartments = apartmentsData.filter(apt => !apt.PREMIUM);
+            
+            if (apartmentsData.length === 0) {
+                 return;
+            }
+
+            if (standardApartments.length === 0 && apartmentsData.some(apt => !apt.PREMIUM)) {
+                // Messaggio mostrato solo se ci sono dati ma nessuno è NON-premium (situazione teoricamente rara)
+                noApartmentsMessage.classList.add('hidden');
+            } else if (standardApartments.length === 0) {
+                 noApartmentsMessage.textContent = translations[currentLang].no_apartments_found;
+                 noApartmentsMessage.classList.remove('hidden');
+            } else {
+                noApartmentsMessage.classList.add('hidden');
+            }
+
+            standardApartments.forEach(apartment => {
+                apartmentsContainer.appendChild(createApartmentCard(apartment, false));
+            });
+        }
+
+        function createApartmentCard(apartment, isPremium) {
+            const apartmentCard = document.createElement('div');
+            apartmentCard.className = 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer flex flex-col apartment-card';
+            if(isPremium) {
+                apartmentCard.classList.add('border-4', 'border-yellow-400', 'ring-4', 'ring-yellow-200'); 
+            }
+            apartmentCard.setAttribute('data-id', apartment.ID);
+
+            const descriptionKey = 'DESCRIZIONE ' + currentLang.toUpperCase();
+            // Utilizza l'intero campo descrittivo (grazie al parser robusto)
+            const descriptionText = apartment[descriptionKey] || apartment['DESCRIZIONE ITA'] || translations[currentLang].not_specified;
+            // Tronca solo il testo per l'anteprima
+            const truncatedDescription = descriptionText.substring(0, 100) + (descriptionText.length > 100 ? '...' : '');
+
+            // **IMMAGINE COPERTINA: PULIZIA ESTREMA DELL'URL**
+            const cleanUrl = (apartment.IMMAGINE_COPERTINA || '').replace(/[\s\n\r\t]/g, '').trim();
+            
+            // Logica di fallback: usa il link pulito o una stringa vuota (per mostrare l'icona rotta)
+            const imageUrl = cleanUrl.length > 0 ? cleanUrl : '';
+
+
+            apartmentCard.innerHTML = `
+                <div class="relative overflow-hidden h-64"> 
+                    <img src="${imageUrl}"
+                        alt="${apartment.TITOLO}"
+                        class="w-full h-full object-cover">
+                    ${isPremium ? getPremiumBadgeHTML() : ''}
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="text-xl font-semibold mb-2 text-slate-700">${apartment.TITOLO}</h3>
+                    <p class="text-gray-600 mb-4 flex-grow">${truncatedDescription}</p>
+                    <div class="mb-4 text-sm">
+                        <h4 class="font-semibold text-slate-700 mb-1" data-translate="modal_availability_title">${translations[currentLang].modal_availability_title}:</h4>
+                        <p class="text-gray-600">${translations[currentLang].contact_for_availability_card}</p>
                     </div>
-                    <p class="text-xl font-bold ${availabilityClass} mb-4">${priceText}</p>
-                    <p class="text-sm text-gray-500 mb-6">${availabilityText}</p>
-                    <button onclick="openApartmentModal(${apartment.ID})" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-[1.01]" data-translate="view_details_button">
+                    <button class="view-details-btn mt-auto bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300" data-id="${apartment.ID}">
                         ${translations[currentLang].view_details_button}
                     </button>
                 </div>
             `;
 
-            return card;
+            const btn = apartmentCard.querySelector('.view-details-btn');
+            
+            const showDetailsHandler = (e) => {
+                if (e) e.stopPropagation(); 
+                showApartmentDetails(apartment, true);
+            };
+
+            btn.addEventListener('click', showDetailsHandler);
+            apartmentCard.addEventListener('click', showDetailsHandler);
+
+            return apartmentCard;
         }
 
-        // --- GESTIONE MODAL ---
-
-        function getTranslatedValue(apartment, key) {
-            const langKey = key + (currentLang === 'en' ? '_EN' : '_IT');
-            return apartment[langKey] || apartment[key] || translations[currentLang].not_specified;
+        function toggleContactInfo() {
+            contactInfoBox.classList.toggle('active');
         }
 
-        function openApartmentModal(apartmentId) {
-            const apartment = apartmentsData.find(app => app.ID == apartmentId);
+        function showApartmentDetails(apartment, shouldShowModal = true) {
+            // Logica per popolare il modale
+            apartmentModal.dataset.currentApartmentId = apartment.ID;
+            modalTitle.textContent = apartment.TITOLO;
+            modalPrice.textContent = `€${apartment.PREZZO || '??'} / notte*`;
+            
+            // Le descrizioni e gli accessori ora funzionano correttamente grazie al parser robusto
+            modalDescriptionIt.textContent = apartment['DESCRIZIONE ITA'] || translations.it.not_specified;
+            modalDescriptionEn.textContent = apartment['DESCRIZIONE ENG'] || translations.en.not_specified;
+            modalAccessories.textContent = apartment.ACCESSORI || translations[currentLang].not_specified;
+            modalAvailabilityText.textContent = translations[currentLang].contact_for_availability_modal;
+            
+            // Nasconde la casella dei contatti ad ogni apertura
+            contactInfoBox.classList.remove('active');
+            
+            // Popola i campi email, telefono e NOME HOST (leggendo i valori interi)
+            const hostName = apartment['NOME HOST'] || translations[currentLang].not_specified;
+            const email = apartment.EMAIL || translations[currentLang].not_specified;
+            const phone = apartment.TELEFONO || translations[currentLang].not_specified;
+            
+            ownerNameElement.textContent = hostName === translations[currentLang].not_specified ? '' : hostName;
+            ownerEmailLink.textContent = email;
+            ownerEmailLink.href = email === translations[currentLang].not_specified ? '#' : `mailto:${email}`;
+            ownerPhoneLink.textContent = phone;
+            ownerPhoneLink.href = phone === translations[currentLang].not_specified ? '#' : `tel:${phone.replace(/\s/g, '')}`; 
+            
+            // Assicurati che le traduzioni nel modale siano aggiornate
+            applyTranslations();
 
-            if (!apartment) {
-                console.error("Appartamento non trovato con ID:", apartmentId);
-                return;
+
+            // Gestione galleria immagini (PULIZIA AGGRESSIVA DEGLI URL)
+            modalImageGallery.innerHTML = '';
+            
+            const rawImagesString = apartment['IMMAGINI CASA'] || '';
+            // Splitta, trimma e rimuove caratteri \s (spazi, newline, tab) da tutti gli URL della galleria
+            const images = rawImagesString.split(',').map(url => url.replace(/[\s\n\r\t]/g, '').trim()).filter(url => url.length > 0);
+            
+            // Pulisce l'URL di copertina con la stessa logica
+            const coverUrl = (apartment.IMMAGINE_COPERTINA || '').replace(/[\s\n\r\t]/g, '').trim();
+
+            // Aggiunge l'immagine di copertina se è valida e non è già nella lista
+            if (coverUrl.length > 0 && !images.includes(coverUrl)) {
+                 images.unshift(coverUrl);
             }
             
-            // Nascondi i contatti all'apertura
-            contactInfoBox.classList.remove('active');
-            showContactBtn.setAttribute('data-is-active', 'false');
-            showContactBtn.textContent = translations[currentLang].modal_show_contact;
+            images.forEach(url => {
+                // *** MODIFICA: LA LOGICA DI FALLBACK È STATA RIMOSSA QUI ***
+                if (url.length > 0) {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = apartment.TITOLO;
+                    modalImageGallery.appendChild(img);
+                }
+            });
 
 
-            // Popola i campi
-            modalTitle.textContent = apartment.Nome || translations[currentLang].not_specified;
-            modalPrice.textContent = apartment.Prezzo ? `€${apartment.Prezzo} / notte*` : translations[currentLang].not_specified;
-            
-            modalDescriptionIt.innerHTML = apartment.Descrizione_IT ? apartment.Descrizione_IT.replace(/\n/g, '<br>') : translations[currentLang].not_specified;
-            modalDescriptionEn.innerHTML = apartment.Descrizione_EN ? apartment.Descrizione_EN.replace(/\n/g, '<br>') : translations[currentLang].not_specified;
-            modalAccessories.textContent = getTranslatedValue(apartment, 'Accessori');
-            
-            // Popola la disponibilità
-            modalAvailabilityText.textContent = apartment.Disponibile === 'Sì' 
-                ? translations[currentLang].contact_for_availability_modal 
-                : 'Non disponibile al momento';
-            modalAvailabilityText.className = 'text-xl font-bold mb-4 ' + (apartment.Disponibile === 'Sì' ? 'text-green-600' : 'text-red-500');
-
-            // Popola i contatti
-            ownerNameElement.textContent = apartment.Proprietario || '';
-            
-            const email = apartment.Email;
-            const phone = apartment.Telefono;
-            
-            ownerEmailLink.textContent = email || translations[currentLang].not_specified;
-            ownerEmailLink.href = email ? `mailto:${email}` : '#';
-            ownerEmailLink.target = email ? '_blank' : '_self';
-
-            ownerPhoneLink.textContent = phone || translations[currentLang].not_specified;
-            ownerPhoneLink.href = phone ? `tel:${phone.replace(/ /g, '')}` : '#';
-            ownerPhoneLink.target = phone ? '_blank' : '_self';
-            
-            // Posizione e Mappa
-            const lat = apartment.Latitudine;
-            const lon = apartment.Longitudine;
-            if (lat && lon) {
-                modalCoordinates.textContent = `Coordinate: ${lat}, ${lon}`;
-                modalMapLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+            // Gestione mappa
+            modalCoordinates.textContent = `Lat: ${apartment.LATITUDINE || translations[currentLang].not_specified}, Lon: ${apartment.LONGITUDINE || translations[currentLang].not_specified}`;
+            if (apartment.LATITUDINE && apartment.LONGITUDINE) {
+                // Costruzione di un link di Google Maps generico (usa il punto come separatore decimale)
+                const lat = apartment.LATITUDINE.replace(',', '.');
+                const lon = apartment.LONGITUDINE.replace(',', '.');
+                const mapUrl = `http://maps.google.com/maps?q=${lat},${lon}`;
+                modalMapLink.href = mapUrl;
                 modalMapLink.classList.remove('hidden');
             } else {
-                modalCoordinates.textContent = 'Coordinate non specificate.';
                 modalMapLink.classList.add('hidden');
             }
 
-
-            // Popola la Galleria Immagini
-            modalImageGallery.innerHTML = '';
-            const images = apartment.Immagini.split(',').map(img => img.trim()).filter(img => img);
-            images.forEach(imgUrl => {
-                const img = document.createElement('img');
-                img.src = imgUrl;
-                img.alt = apartment.Nome;
-                modalImageGallery.appendChild(img);
-            });
-            if (images.length === 0) {
-                 modalImageGallery.innerHTML = `<img src="https://via.placeholder.com/600x400?text=Immagine+Non+Disponibile" alt="Immagine Non Disponibile">`;
+            if (shouldShowModal) {
+                apartmentModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; 
+                
+                setTimeout(() => {
+                    apartmentModal.querySelector('.max-w-4xl').classList.remove('scale-95', 'opacity-0');
+                    apartmentModal.querySelector('.max-w-4xl').classList.add('scale-100', 'opacity-100');
+                }, 10);
             }
-
-            // Mostra la modal con animazione
-            apartmentModal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
-            const modalContent = apartmentModal.querySelector(':nth-child(1)'); // Il div interno
-
-            // Forza il reflow per garantire che la transizione venga applicata
-            void modalContent.offsetWidth; 
-
-            modalContent.classList.remove('scale-95', 'opacity-0');
-            modalContent.classList.add('scale-100', 'opacity-100');
         }
 
         function closeApartmentModal() {
-            const modalContent = apartmentModal.querySelector(':nth-child(1)');
+            apartmentModal.querySelector('.max-w-4xl').classList.remove('scale-100', 'opacity-100');
+            apartmentModal.querySelector('.max-w-4xl').classList.add('scale-95', 'opacity-0');
             
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-
             setTimeout(() => {
                 apartmentModal.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
-            }, 300); // 300ms, come la durata della transizione CSS
+                document.body.style.overflow = ''; 
+            }, 300); 
         }
         
-        // --- GESTIONE MOSTRA/NASCONDI CONTATTI ---
-        function toggleContactInfo() {
-            const isActive = contactInfoBox.classList.contains('active');
-            if (isActive) {
-                contactInfoBox.classList.remove('active');
-                showContactBtn.textContent = translations[currentLang].modal_show_contact;
-            } else {
-                contactInfoBox.classList.add('active');
-                showContactBtn.textContent = 'Nascondi Contatti';
-            }
-        }
-        
-        // --- GESTIONE DISCLAIMER ---
+        // Modale Disclaimer Functions
         function showDisclaimer(event) {
-            event.preventDefault();
+            event.preventDefault(); 
             disclaimerModal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeDisclaimerModal() {
             disclaimerModal.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
+            document.body.style.overflow = '';
         }
         
-        // --- FUNZIONE DI TRADUZIONE ---
-        function updateContentLanguage() {
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[currentLang] && translations[currentLang][key]) {
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        element.placeholder = translations[currentLang][key];
-                    } else {
-                        element.textContent = translations[currentLang][key];
-                    }
-                }
-            });
-            
-            // Aggiorna il testo del bottone contatti
-            if (contactInfoBox.classList.contains('active')) {
-                showContactBtn.textContent = currentLang === 'it' ? 'Nascondi Contatti' : 'Hide Contact';
-            } else {
-                showContactBtn.textContent = translations[currentLang].modal_show_contact;
-            }
-            
-            // Ricarica le card per aggiornare badge e testo Disponibilità/Dettagli
-            if (apartmentsData.length > 0) {
-                 renderApartments();
-            } else if (loadingIndicator.classList.contains('hidden')) {
-                // Se non ci sono dati, aggiorna i messaggi di "Non trovato"
-                document.getElementById('no-featured-message').textContent = translations[currentLang].no_featured_found;
-                document.getElementById('no-apartments-message').textContent = translations[currentLang].no_apartments_found;
-            }
-        }
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            updateContentLanguage();
-            // Aggiorna i pulsanti di lingua
-            document.querySelectorAll('.lang-button').forEach(btn => {
-                btn.classList.remove('bg-sky-500', 'hover:bg-sky-600', 'bg-gray-600', 'hover:bg-gray-700');
-                if (btn.id === `lang-${lang}`) {
-                    btn.classList.add('bg-sky-500', 'hover:bg-sky-600');
-                } else {
-                    btn.classList.add('bg-gray-600', 'hover:bg-gray-700');
-                }
-            });
-        }
-        
-        // --- GESTIONE SCROLL TO TOP ---
+        // Scroll to Top Button Logic
         const scrollToTopBtn = document.getElementById('scrollToTopBtn');
 
-        const scrollFunction = () => {
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
                 scrollToTopBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-                scrollToTopBtn.classList.add('opacity-100', 'translate-y-0');
+                scrollToTopBtn.classList.add('opacity-100');
             } else {
-                scrollToTopBtn.classList.remove('opacity-100', 'translate-y-0');
+                scrollToTopBtn.classList.remove('opacity-100');
                 scrollToTopBtn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
             }
-        };
-
-        window.onscroll = scrollFunction;
-
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
 
-        // --- EVENT LISTENERS E INIZIALIZZAZIONE ---
-        document.getElementById('lang-it').addEventListener('click', () => setLanguage('it'));
-        document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
-
-        // Caricamento iniziale
-        fetchApartmentsFromSheet();
-        setLanguage('it'); // Imposta la lingua iniziale e aggiorna i bottoni
+        // Initial load functions
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup language buttons
+            document.getElementById('lang-it').addEventListener('click', () => setLanguage('it'));
+            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+            
+            // Fetch data and render
+            fetchApartmentsFromSheet(); 
+            setLanguage(currentLang); 
+        });
     </script>
 </body>
 </html>
