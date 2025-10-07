@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyStay Malpensa - Il tuo soggiorno vicino all'Aeroporto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the map icon and general overrides */
+        .map-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            margin-right: 8px;
+        }
+
+        /* NEW: Badge Styliing for Featured Apartments */
+        .premium-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: #FFD700; /* Gold color for the medal */
+            color: #333;
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+        .medal-icon {
+            width: 18px;
+            height: 18px;
+            fill: #333;
+            margin-right: 6px;
+        }
+        
+        /* Modal gallery simple styling for demo */
+        #modal-image-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        /* New: Styling for the Contact Info box */
+        .contact-info-box {
+            transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            padding: 0 1rem; /* Initial zero padding horizontal only */
+            margin: 0; /* Initial zero margin */
+        }
+        .contact-info-box.active {
+            max-height: 200px; /* Sufficient height to show content */
+            opacity: 1;
+            padding-top: 1rem; 
+            padding-bottom: 1rem;
+            margin-top: 1rem;
+        }
+        
+        /* NUOVO: Stile per la sezione Hero fissa a tutto schermo e l'immagine */
+        #hero-section {
+            /* 80vh: circa l'80% dell'altezza dello schermo, un buon compromesso visivo */
+            min-height: 80vh; 
+            /* Rende l'elemento non scrollabile internamente */
+            overflow: hidden; 
+        }
+
+        #hero-section .hero-image {
+            /* Assicura che l'immagine sia in posizione assoluta rispetto alla sezione */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.60;
+            /* Per posizionare l'immagine sotto i contenuti del testo */
+            z-index: 1; 
+        }
+
+        /* NUOVO: Aumenta lo z-index dell'header per farlo stare sopra l'immagine hero */
+        header {
+            z-index: 60; 
+        }
+
+        /* Miglioramento Mobile - Rende il titolo più gestibile su schermi piccoli */
+        @media (max-width: 640px) {
+            #hero-section h1 {
+                font-size: 3rem; /* 48px, equivalente a text-5xl di Tailwind */
+            }
+            #hero-section p {
+                font-size: 1.125rem; /* 18px, equivalente a text-lg di Tailwind */
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 relative">
+
+    <header class="sticky top-0 z-60 bg-white shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-sky-600">FlyStay</div>
+            <div class="hidden sm:flex items-center space-x-4"> 
+                <a href="#featured-apartments-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_apartments">Appartamenti</a>
+                <a href="#about-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_about">Chi Siamo</a>
+                <a href="#contact-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_contact">Contatti</a>
+                
+                <div class="flex space-x-2 ml-4">
+                    <button id="lang-it" class="lang-button bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold py-1 px-2 rounded transition duration-300">IT</button>
+                    <button id="lang-en" class="lang-button bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-2 rounded transition duration-300">EN</button>
+                </div>
+            </div>
+             <button class="sm:hidden text-gray-600 hover:text-sky-600">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                 </svg>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero-section" class="relative bg-gray-900 min-h-[80vh] flex items-center justify-center text-center overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1560448204-6f17c3741639?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                alt="Modern apartment interior" 
+                class="hero-image"> 
+            
+            <div class="relative z-10 p-6">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-4 drop-shadow-lg" data-translate="hero_title">FlyStay Malpensa</h1>
+                <p class="text-xl md:text-2xl text-gray-200 mb-8 drop-shadow-md" data-translate="hero_subtitle">Il tuo soggiorno perfetto vicino all'aeroporto di Malpensa.</p>
+                <a href="#apartments-section" class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105" data-translate="explore_button">Esplora Appartamenti</a>
+            </div>
+        </section>
+        
+        <section id="featured-apartments-section" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center text-slate-800 mb-2" data-translate="featured_title">✨ Soluzioni in Evidenza ✨</h2>
+                <p class="text-center text-gray-500 mb-10" data-translate="featured_subtitle">Gli appartamenti scelti dai nostri partner premium per te.</p>
+                
+                <div id="loading-indicator" class="text-center text-sky-600 font-semibold hidden" data-translate="loading_apartments">Caricamento appartamenti...</div>
+                <p id="no-featured-message" class="text-center text-gray-500 italic hidden mt-8" data-translate="no_featured_found">Nessun appartamento in evidenza al momento.</p>
+
+                <div id="featured-apartments-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    </div>
+            </div>
+        </section>
+
+        <section id="apartments-section" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center text-slate-800 mb-10" data-translate="apartments_available">Tutte le Soluzioni Disponibili</h2>
+                
+                <p id="no-apartments-message" class="text-center text-gray-500 italic hidden mt-8" data-translate="no_apartments_found">Nessun altro appartamento trovato.</p>
+
+                <div id="apartments-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    </div>
+            </div>
+        </section>
+<section id="about-section" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center text-slate-800 mb-8" data-translate="about_title">Chi Siamo</h2>
+                <div class="max-w-4xl mx-auto text-lg text-gray-600 space-y-4">
+                    <p data-translate="about_paragraph_1">Benvenuti su FlyStay Malpensa, la vostra soluzione ideale per un soggiorno confortevole e conveniente vicino all'aeroporto di Malpensa. Comprendiamo l'importanza di un riposo sereno prima o dopo un lungo viaggio, ed è per questo che ci impegniamo a offrire appartamenti accoglienti e ben attrezzati, pensati per soddisfare ogni vostra esigenza.</p>
+                    <p data-translate="about_paragraph_2">La nostra missione è semplice: garantire un'esperienza senza stress, offrendo alloggi di qualità superiore con tutti i comfort moderni, in posizioni strategiche che permettono un facile accesso all'aeroporto e alle principali attrazioni della zona.</p>
+                    <p data-translate="about_paragraph_3">Siamo qui per rendere il vostro viaggio il più piacevole possibile. Scegliete FlyStay Malpensa per un soggiorno indimenticabile!</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="reviews-section" class="py-16 bg-sky-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center text-slate-800 mb-10" data-translate="reviews_title">Dicono di Noi</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> 
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                        <p class="text-gray-600 italic mb-4" data-translate="review_text_1">Soggiorno fantastico! L'appartamento era pulitissimo e molto confortevole. Perfetto per chi ha bisogno di un punto d'appoggio vicino Malpensa.</p>
+                        <p class="font-semibold text-slate-700" data-translate="review_user_1_name">Marco Rossi</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                        <p class="text-gray-600 italic mb-4" data-translate="review_text_2">Ottima posizione e personale molto disponibile. Ho apprezzato la tranquillità e la comodità. Tornerò sicuramente!</p>
+                        <p class="font-semibold text-slate-700" data-translate="review_user_2_name">Laura Bianchi</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                        <p class="text-gray-600 italic mb-4" data-translate="review_text_3">Impeccable apartment and seamless check-in process. Highly recommend for anyone needing accommodation near Malpensa Airport.</p>
+                        <p class="font-semibold text-slate-700" data-translate="review_user_3_name">John Doe</p>
+                    </div>
+                </div>
+                <div class="text-center mt-10">
+                    <a href="#" class="text-sky-600 hover:text-sky-800 font-semibold transition duration-300" data-translate="view_all_reviews">Leggi tutte le recensioni</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-section" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-translate="contact_title">Contatti Generali</h2>
+                <p class="text-lg text-gray-600 mb-8" data-translate="contact_text">Hai domande o hai bisogno di assistenza generale? Non esitare a contattarci!</p>
+                 <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8"> 
+                    <div class="flex items-center text-xl text-slate-700">
+                        <span class="font-semibold mr-2" data-translate="contact_email">Email:</span>
+                        <a href="mailto:info@flystaymalpensa.com" class="text-sky-600 hover:text-sky-800 font-medium">info@flystaymalpensa.com</a>
+                    </div>
+                    <div class="flex items-center text-xl text-slate-700">
+                        <span class="font-semibold mr-2" data-translate="contact_phone">Telefono:</span>
+                        <a href="tel:+3903311234567" class="text-sky-600 hover:text-sky-800 font-medium">+39 0331 1234567</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+<footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="mb-4">© 2024 FlyStay Malpensa. <span data-translate="footer_rights">Tutti i diritti riservati.</span></p>
+            <div class="space-x-4">
+                <span class="text-gray-400" data-translate="footer_info">Per informazioni:</span>
+                <a href="#" class="text-sky-400 hover:text-sky-200 transition duration-300" onclick="showDisclaimer(event)" data-translate="footer_disclaimer">Disclaimer</a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" class="fixed bottom-6 right-6 bg-sky-500 text-white p-3 rounded-full shadow-xl transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none hover:bg-sky-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+    
+    <div id="apartment-modal" class="fixed inset-0 z-[100] bg-black bg-opacity-75 flex items-center justify-center hidden transition-opacity duration-300" onclick="if(event.target === this) closeApartmentModal()">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4 transform transition-all duration-300 scale-95 opacity-0" 
+            style="transition: transform 0.3s ease-out, opacity 0.3s ease-out;" 
+            data-current-apartment-id="">
+            
+            <div class="sticky top-0 bg-white p-4 border-b rounded-t-xl flex justify-between items-start z-10">
+                <div>
+                    <h2 id="modal-title" class="text-3xl font-bold text-slate-800">Nome Appartamento</h2>
+                    <p id="modal-price" class="text-xl text-sky-600 font-semibold mt-1">€/notte*</p>
+                </div>
+                <button onclick="closeApartmentModal()" class="text-gray-500 hover:text-gray-800 transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-8">
+                <div id="modal-image-gallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4"> 
+                    </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> 
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_description_it_title">Descrizione (Italiano):</h3>
+                        <p id="modal-description-it" class="text-gray-600 leading-relaxed"></p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_description_en_title">Description (English):</h3>
+                        <p id="modal-description-en" class="text-gray-600 leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_accessories_title">Accessori:</h3>
+                    <p id="modal-accessories" class="text-gray-700"></p>
+                </div>
+                
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_location_title">Posizione:</h3>
+                    <p id="modal-coordinates" class="text-gray-700 mb-3 text-sm"></p>
+                    
+                    <a id="modal-map-link" href="#" target="_blank" class="inline-flex items-center text-sky-600 hover:text-sky-800 font-medium transition duration-300 hidden">
+                        <svg class="map-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <span data-translate="modal_view_map">Vedi su Google Maps</span>
+                    </a>
+                </div>
+
+
+                <div class="text-center pt-4 border-t">
+                    <p id="modal-availability-text" class="text-xl font-bold text-red-500 mb-4" data-translate="modal_availability_title">Disponibilità:</p>
+                    
+                    <button id="show-contact-btn" onclick="toggleContactInfo()" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition duration-300" data-translate="modal_show_contact">Mostra Contatti Proprietario</button>
+
+                    <div id="contact-info-box" class="contact-info-box border border-gray-200 bg-gray-50 rounded-lg">
+                        <p id="owner-name" class="text-xl font-bold mb-2 text-slate-700"></p> 
+                        <p class="text-sm font-medium mb-2 text-slate-700" data-translate="contact_owner_info">Contatti (per prenotazioni):</p>
+                        <p class="text-lg font-semibold text-gray-700 mb-2">
+                            <span data-translate="contact_email_label">Email:</span> 
+                            <a id="owner-email" href="" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank"></a>
+                        </p>
+                        <p class="text-lg font-semibold text-gray-700">
+                            <span data-translate="contact_phone_label">Telefono:</span> 
+                            <a id="owner-phone" href="" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank"></a>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <div id="disclaimer-modal" class="fixed inset-0 z-[100] bg-black bg-opacity-75 flex items-center justify-center hidden" onclick="if(event.target === this) closeDisclaimerModal()">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 m-4">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4" data-translate="disclaimer_title">Disclaimer</h2>
+            <p class="text-gray-600 mb-4" data-translate="disclaimer_short_1">Le informazioni su questo sito sono fornite a scopo generale. FlyStay Malpensa si impegna per l'accuratezza, ma non garantisce la completezza o l'idoneità. L'affidamento su tali informazioni è a vostro rischio.</p>
+            <p class="text-gray-600 mb-4" data-translate="disclaimer_short_2">Non saremo responsabili per eventuali perdite o danni indiretti. Collegamenti esterni non sono sotto il nostro controllo e non implicano approvazione.</p>
+            <p class="text-gray-600 mb-4" data-translate="disclaimer_short_3">Ci impegniamo a mantenere il sito operativo, ma non siamo responsabili per interruzioni temporanee dovute a problemi tecnici fuori dal nostro controllo.</p>
+            <button onclick="closeDisclaimerModal()" class="mt-4 bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Chiudi</button>
+        </div>
+    </div>
+
+
+    <script>
+        // ***************************************************************
+        // *** IL TUO LINK CSV PUBBLICATO È INSERITO QUI ***
+        // ***************************************************************
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8HIxIC8hvMJFpWGVnU7o_tXvxcLT2b8odkOJIvz_YP3XNgIRPzf6Y7HZFkyZMkKeUMDPl1oSi3z83/pub?output=csv'; 
+
+        let apartmentsData = []; 
+
+        const apartmentsContainer = document.getElementById('apartments-container');
+        const featuredApartmentsContainer = document.getElementById('featured-apartments-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const noApartmentsMessage = document.getElementById('no-apartments-message');
+        const noFeaturedMessage = document.getElementById('no-featured-message');
+        const apartmentModal = document.getElementById('apartment-modal');
+        const disclaimerModal = document.getElementById('disclaimer-modal');
+
+        const modalTitle = document.getElementById('modal-title');
+        const modalPrice = document.getElementById('modal-price');
+        const modalDescriptionIt = document.getElementById('modal-description-it');
+        const modalDescriptionEn = document.getElementById('modal-description-en');
+        const modalAccessories = document.getElementById('modal-accessories');
+        const modalAvailabilityText = document.getElementById('modal-availability-text');
+        const modalImageGallery = document.getElementById('modal-image-gallery');
+        const modalCoordinates = document.getElementById('modal-coordinates');
+        const modalMapLink = document.getElementById('modal-map-link');
+        
+        // Nuovi elementi per i contatti
+        const contactInfoBox = document.getElementById('contact-info-box');
+        const ownerNameElement = document.getElementById('owner-name'); 
+        const ownerEmailLink = document.getElementById('owner-email');
+        const ownerPhoneLink = document.getElementById('owner-phone');
+        const showContactBtn = document.getElementById('show-contact-btn');
+
+
+        // Language settings
+        let currentLang = 'it'; // Default language
+
+        const translations = {
+            it: {
+                nav_apartments: 'Appartamenti',
+                nav_about: 'Chi Siamo',
+                nav_contact: 'Contatti',
+                explore_button: 'Esplora Appartamenti',
+                featured_title: '✨ Soluzioni in Evidenza ✨',
+                featured_subtitle: 'Gli appartamenti scelti dai nostri partner premium per te.',
+                no_featured_found: 'Nessun appartamento in evidenza al momento.',
+                apartments_available: 'Tutte le Soluzioni Disponibili',
+                premium_badge_text: 'In Evidenza',
+                loading_apartments: 'Caricamento appartamenti...',
+                no_apartments_found: 'Nessun altro appartamento trovato.',
+                contact_for_availability_card: 'Contattaci per conoscere la disponibilità.',
+                contact_for_availability_modal: 'Contattaci per conoscere la disponibilità.',
+                view_details_button: 'Vedi Dettagli',
+                not_specified: 'Non specificato',
+                hero_title: 'FlyStay Malpensa',
+                hero_subtitle: 'Il tuo soggiorno perfetto vicino all\'aeroporto di Malpensa.',
+                about_title: 'Chi Siamo',
+                about_paragraph_1: 'Benvenuti su FlyStay Malpensa, la vostra soluzione ideale per un soggiorno confortevole e conveniente vicino all\'aeroporto di Malpensa. Comprendiamo l\'importanza di un riposo sereno prima o dopo un lungo viaggio, ed è per questo che ci impegniamo a offrire appartamenti accoglienti e ben attrezzati, pensati per soddisfare ogni vostra esigenza.',
+                about_paragraph_2: 'La nostra missione è semplice: garantire un\'esperienza senza stress, offrendo alloggi di qualità superiore con tutti i comfort moderni, in posizioni strategiche che permettono un facile accesso all\'aeroporto e alle principali attrazioni della zona.',
+                about_paragraph_3: 'Siamo qui per rendere il vostro viaggio il più piacevole possibile. Scegliete FlyStay Malpensa per un soggiorno indimenticabile!',
+                reviews_title: 'Dicono di Noi',
+                review_user_1_name: 'Marco Rossi',
+                review_text_1: 'Soggiorno fantastico! L\'appartamento era pulitissimo e molto confortevole. Perfetto per chi ha bisogno di un punto d\'appoggio vicino Malpensa.',
+                review_user_2_name: 'Laura Bianchi',
+                review_text_2: 'Ottima posizione e personale molto disponibile. Ho apprezzato la tranquillità e la comodità. Tornerò sicuramente!',
+                review_user_3_name: 'John Doe',
+                review_text_3: 'Impeccable apartment and seamless check-in process. Highly recommend for anyone needing accommodation near Malpensa Airport.',
+                view_all_reviews: 'Leggi tutte le recensioni',
+                contact_title: 'Contatti Generali',
+                contact_text: 'Hai domande o hai bisogno di assistenza generale? Non esitare a contattarci!',
+                contact_email: 'Email:',
+                contact_phone: 'Telefono:',
+                footer_rights: 'Tutti i diritti riservati.',
+                footer_info: 'Per informazioni:',
+                footer_disclaimer: 'Disclaimer',
+                disclaimer_title: 'Disclaimer',
+                disclaimer_short_1: 'Le informazioni su questo sito sono fornite a scopo generale. FlyStay Malpensa si impegna per l\'accuratezza, ma non garantisce la completezza o l\'idoneità. L\'affidamento su tali informazioni è a vostro rischio.',
+                disclaimer_short_2: 'Non saremo responsabili per eventuali perdite o danni indiretti. Collegamenti esterni non sono sotto il nostro controllo e non implicano approvazione.',
+                disclaimer_short_3: 'Ci impegniamo a mantenere il sito operativo, ma non siamo responsabili per interruzioni temporanee dovute a problemi tecnici fuori dal nostro controllo.',
+                modal_description_it_title: 'Descrizione (Italiano):',
+                modal_description_en_title: 'Description (English):',
+                modal_accessories_title: 'Accessori:',
+                modal_availability_title: 'Disponibilità:',
+                modal_location_title: 'Posizione:',
+                modal_view_map: 'Vedi su Google Maps',
+                modal_show_contact: 'Mostra Contatti Proprietario', 
+                contact_owner_info: 'Contatti (per prenotazioni):', 
+                contact_email_label: 'Email:',
+                contact_phone_label: 'Telefono:',
+            },
+            en: {
+                nav_apartments: 'Apartments',
+                nav_about: 'About Us',
+                nav_contact: 'Contact',
+                explore_button: 'Explore Apartments',
+                featured_title: '✨ Featured Solutions ✨',
+                featured_subtitle: 'Apartments selected by our premium partners for you.',
+                no_featured_found: 'No featured apartments at the moment.',
+                apartments_available: 'All Available Solutions',
+                premium_badge_text: 'Featured',
+                loading_apartments: 'Loading apartments...',
+                no_apartments_found: 'No other apartments found.',
+                contact_for_availability_card: 'Contact us for availability.',
+                contact_for_availability_modal: 'Contact us for availability.',
+                view_details_button: 'View Details',
+                not_specified: 'Not specified',
+                hero_title: 'FlyStay Malpensa',
+                hero_subtitle: 'Your perfect stay near Malpensa Airport.',
+                about_title: 'About Us',
+                about_paragraph_1: 'Welcome to FlyStay Malpensa, your ideal solution for a comfortable and convenient stay near Malpensa Airport. We understand the importance of a peaceful rest before or after a long journey, which is why we are committed to offering cozy and well-equipped apartments, designed to meet your every need.',
+                about_paragraph_2: 'Our mission is simple: to ensure a stress-free experience, offering superior quality accommodations with all modern comforts, in strategic locations that allow easy access to the airport and the main attractions of the area.',
+                about_paragraph_3: 'We are here to make your trip as pleasant as possible. Choose FlyStay Malpensa for an unforgettable stay!',
+                reviews_title: 'What Our Guests Say',
+                review_user_1_name: 'Mark White',
+                review_text_1: 'Fantastic stay! The apartment was spotless and very comfortable. Perfect for anyone needing a base near Malpensa.',
+                review_user_2_name: 'Laura Smith',
+                review_text_2: 'Great location and very helpful staff. I appreciated the quietness and convenience. I will definitely be back!',
+                review_user_3_name: 'John Doe',
+                review_text_3: 'Impeccable apartment and seamless check-in process. Highly recommend for anyone needing accommodation near Malpensa Airport.',
+                view_all_reviews: 'Read all reviews',
+                contact_title: 'General Contact',
+                contact_text: 'Do you have questions or need general assistance? Do not hesitate to contact us!',
+                contact_email: 'Email:',
+                contact_phone: 'Phone:',
+                footer_rights: 'All rights reserved.',
+                footer_info: 'For information:',
+                footer_disclaimer: 'Disclaimer',
+                disclaimer_title: 'Disclaimer',
+                disclaimer_short_1: 'The information on this website is for general purposes only. FlyStay Malpensa strives for accuracy but does not guarantee completeness or suitability. Reliance on such information is at your own risk.',
+                disclaimer_short_2: 'We will not be liable for any indirect loss or damage. External links are beyond our control and do not imply endorsement.',
+                disclaimer_short_3: 'Every effort is made to keep the website up and running smoothly. However, FlyStay Malpensa takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.',
+                modal_description_it_title: 'Description (Italian):',
+                modal_description_en_title: 'Description (English):',
+                modal_accessories_title: 'Accessories:',
+                modal_availability_title: 'Availability:',
+                modal_location_title: 'Location:',
+                modal_view_map: 'View on Google Maps',
+                modal_show_contact: 'Show Owner Contact', 
+                contact_owner_info: 'Contact (for bookings):', 
+                contact_email_label: 'Email:',
+                contact_phone_label: 'Phone:',
+            }
+        };
+
+        // --- LOGICA DI CARICAMENTO DATI DA GOOGLE SHEET (ROBUSTA) ---
+        async function fetchApartmentsFromSheet() {
+            if (!GOOGLE_SHEET_CSV_URL) {
+                console.error("ERRORE: Link CSV non configurato.");
+                loadingIndicator.textContent = "ERRORE: Link CSV non configurato. Controlla il codice sorgente.";
+                loadingIndicator.classList.remove('hidden');
+                return;
+            }
+
+            loadingIndicator.classList.remove('hidden');
+            loadingIndicator.textContent = translations[currentLang].loading_apartments;
+            apartmentsContainer.innerHTML = ''; 
+            featuredApartmentsContainer.innerHTML = ''; 
+
+            try {
+                const response = await fetch(GOOGLE_SHEET_CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`Errore HTTP! Stato: ${response.status}`);
+                }
+                const csvText = await response.text();
+                
+                // --- ALGORITMO DI PARSING CSV PIÙ ROBUSTO PER GESTIRE VIRGOLE E SPAZI ---
+                const lines = csvText.trim().split('\n');
+                if (lines.length <= 1) {
+                    apartmentsData = [];
+                    console.warn("Nessun dato trovato nel foglio.");
+                } else {
+                    // Headers sono la prima riga e vengono puliti
+                    const headers = lines[0].split(',').map(header => header.trim().replace(/"/g, ''));
+                    
+                    apartmentsData = lines.slice(1).map(line => {
+                        let apartment = {};
+                        let inQuotes = false;
+                        let currentField = '';
+                        let values = [];
+
+                        // Itera carattere per carattere per gestire correttamente le virgole dentro le virgolette
+                        for (let i = 0; i < line.length; i++) {
+                            const char = line[i];
+
+                            if (char === '"') {
+                                // Se è una doppia virgoletta all'interno di un campo quotato (per scappare una virgoletta)
+                                if (inQuotes && line[i+1] === '"') {
+                                    currentField += char;
+                                    i++; // Salta il prossimo carattere (la seconda virgoletta)
+                                    continue;
+                                }
+                                // Toggle (accendi/spegni) lo stato delle virgolette
+                                inQuotes = !inQuotes;
+                                // Non includere le virgolette di apertura/chiusura
+                                continue; 
+                            }
+
+                            if (char === ',' && !inQuotes) {
+                                values.push(currentField.trim());
+                                currentField = '';
+                            } else {
+                                currentField += char;
+                            }
+                        }
+                        // Aggiungi l'ultimo campo
+                        values.push(currentField.trim()); 
+                        
+                        // Mappa i valori con gli headers, assicurando che ci siano abbastanza valori per tutti gli headers
+                        headers.forEach((header, index) => {
+                            apartment[header] = values[index] !== undefined ? values[index] : '';
+                        });
+
+                        return apartment;
+                    }).filter(apartment => apartment.Nome && apartment.Immagini); // Filtra righe vuote o senza nome/immagine
+                }
+                
+                renderApartments();
+
+            } catch (error) {
+                console.error("Errore nel caricamento dei dati:", error);
+                loadingIndicator.textContent = "Errore nel caricamento dei dati. Riprova più tardi.";
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        }
+
+        // --- FUNZIONE DI RENDERING ---
+        function renderApartments() {
+            apartmentsContainer.innerHTML = '';
+            featuredApartmentsContainer.innerHTML = '';
+            
+            const featuredApartments = apartmentsData.filter(app => app['In Evidenza'] === 'Sì');
+            const regularApartments = apartmentsData.filter(app => app['In Evidenza'] !== 'Sì');
+
+            // Render Featured Apartments
+            if (featuredApartments.length > 0) {
+                noFeaturedMessage.classList.add('hidden');
+                featuredApartments.forEach(apartment => {
+                    featuredApartmentsContainer.appendChild(createApartmentCard(apartment, true));
+                });
+            } else {
+                noFeaturedMessage.classList.remove('hidden');
+            }
+
+            // Render Regular Apartments
+            if (regularApartments.length > 0) {
+                noApartmentsMessage.classList.add('hidden');
+                regularApartments.forEach(apartment => {
+                    apartmentsContainer.appendChild(createApartmentCard(apartment, false));
+                });
+            } else {
+                 if (featuredApartments.length === 0) {
+                    noApartmentsMessage.classList.add('hidden'); // Nascondi anche qui se non ci sono proprio appartamenti
+                } else {
+                     noApartmentsMessage.classList.remove('hidden'); // Mostra solo se ci sono featured ma non regular
+                }
+            }
+        }
+
+        // --- CREAZIONE CARD APPARTAMENTO ---
+        function createApartmentCard(apartment, isFeatured) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 relative';
+            card.setAttribute('data-apartment-id', apartment.ID);
+
+            const images = apartment.Immagini.split(',').map(img => img.trim()).filter(img => img);
+            const coverImage = images.length > 0 ? images[0] : 'https://via.placeholder.com/600x400?text=Immagine+Non+Disponibile';
+
+            // Prepara i dati del prezzo e della disponibilità
+            const priceText = apartment.Prezzo ? `€${apartment.Prezzo} / notte*` : translations[currentLang].not_specified;
+            const availabilityClass = apartment.Disponibile === 'Sì' ? 'text-green-600' : 'text-red-500';
+            const availabilityText = apartment.Disponibile === 'Sì' 
+                ? translations[currentLang].contact_for_availability_card 
+                : '<span class="text-red-500 font-bold">Non disponibile</span>';
+
+            card.innerHTML = `
+                <div class="relative h-56">
+                    <img src="${coverImage}" alt="${apartment.Nome}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+                    ${isFeatured ? `
+                        <div class="premium-badge">
+                            <svg class="medal-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.81-7-7.93 0-.62.08-1.21.21-1.79l5.8 5.8 1-1V17h2v2h-1.3l-1.63-1.63c-.15.03-.3.07-.47.1-.42.08-.85.12-1.27.12zM18.89 12c0 4.29-3.32 7.79-7.5 8.16l1.76-1.76c.72-.72 1.88-.72 2.6 0l2.6 2.6c1.11-1.39 1.83-3.13 2-5zm-1.89-6h-2v2h2V6zM12 4c2.81 0 5.37 1.25 7.08 3.25l-2.6 2.6c-.72.72-1.88.72-2.6 0l-1.76-1.76C12.15 8.08 11.08 8 10 8s-2.15.08-3.08.24l-1.76 1.76c-1.55 1.55-2.26 3.73-2.26 5.86 0 .68.1 1.34.28 1.97L12 12l.9-1.9L12 9l2-2 3.08 3.08C17.7 7.15 15.08 4 12 4z"/>
+                            </svg>
+                            <span data-translate="premium_badge_text">${translations[currentLang].premium_badge_text}</span>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">${apartment.Nome}</h3>
+                    <div class="flex items-center text-lg text-sky-600 font-semibold mb-4">
+                        <svg class="map-icon text-sky-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <span>${apartment.Città} (${apartment.Distanza} km)</span>
+                    </div>
+                    <p class="text-xl font-bold ${availabilityClass} mb-4">${priceText}</p>
+                    <p class="text-sm text-gray-500 mb-6">${availabilityText}</p>
+                    <button onclick="openApartmentModal(${apartment.ID})" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-[1.01]" data-translate="view_details_button">
+                        ${translations[currentLang].view_details_button}
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // --- GESTIONE MODAL ---
+
+        function getTranslatedValue(apartment, key) {
+            const langKey = key + (currentLang === 'en' ? '_EN' : '_IT');
+            return apartment[langKey] || apartment[key] || translations[currentLang].not_specified;
+        }
+
+        function openApartmentModal(apartmentId) {
+            const apartment = apartmentsData.find(app => app.ID == apartmentId);
+
+            if (!apartment) {
+                console.error("Appartamento non trovato con ID:", apartmentId);
+                return;
+            }
+            
+            // Nascondi i contatti all'apertura
+            contactInfoBox.classList.remove('active');
+            showContactBtn.setAttribute('data-is-active', 'false');
+            showContactBtn.textContent = translations[currentLang].modal_show_contact;
+
+
+            // Popola i campi
+            modalTitle.textContent = apartment.Nome || translations[currentLang].not_specified;
+            modalPrice.textContent = apartment.Prezzo ? `€${apartment.Prezzo} / notte*` : translations[currentLang].not_specified;
+            
+            modalDescriptionIt.innerHTML = apartment.Descrizione_IT ? apartment.Descrizione_IT.replace(/\n/g, '<br>') : translations[currentLang].not_specified;
+            modalDescriptionEn.innerHTML = apartment.Descrizione_EN ? apartment.Descrizione_EN.replace(/\n/g, '<br>') : translations[currentLang].not_specified;
+            modalAccessories.textContent = getTranslatedValue(apartment, 'Accessori');
+            
+            // Popola la disponibilità
+            modalAvailabilityText.textContent = apartment.Disponibile === 'Sì' 
+                ? translations[currentLang].contact_for_availability_modal 
+                : 'Non disponibile al momento';
+            modalAvailabilityText.className = 'text-xl font-bold mb-4 ' + (apartment.Disponibile === 'Sì' ? 'text-green-600' : 'text-red-500');
+
+            // Popola i contatti
+            ownerNameElement.textContent = apartment.Proprietario || '';
+            
+            const email = apartment.Email;
+            const phone = apartment.Telefono;
+            
+            ownerEmailLink.textContent = email || translations[currentLang].not_specified;
+            ownerEmailLink.href = email ? `mailto:${email}` : '#';
+            ownerEmailLink.target = email ? '_blank' : '_self';
+
+            ownerPhoneLink.textContent = phone || translations[currentLang].not_specified;
+            ownerPhoneLink.href = phone ? `tel:${phone.replace(/ /g, '')}` : '#';
+            ownerPhoneLink.target = phone ? '_blank' : '_self';
+            
+            // Posizione e Mappa
+            const lat = apartment.Latitudine;
+            const lon = apartment.Longitudine;
+            if (lat && lon) {
+                modalCoordinates.textContent = `Coordinate: ${lat}, ${lon}`;
+                modalMapLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+                modalMapLink.classList.remove('hidden');
+            } else {
+                modalCoordinates.textContent = 'Coordinate non specificate.';
+                modalMapLink.classList.add('hidden');
+            }
+
+
+            // Popola la Galleria Immagini
+            modalImageGallery.innerHTML = '';
+            const images = apartment.Immagini.split(',').map(img => img.trim()).filter(img => img);
+            images.forEach(imgUrl => {
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.alt = apartment.Nome;
+                modalImageGallery.appendChild(img);
+            });
+            if (images.length === 0) {
+                 modalImageGallery.innerHTML = `<img src="https://via.placeholder.com/600x400?text=Immagine+Non+Disponibile" alt="Immagine Non Disponibile">`;
+            }
+
+            // Mostra la modal con animazione
+            apartmentModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            const modalContent = apartmentModal.querySelector(':nth-child(1)'); // Il div interno
+
+            // Forza il reflow per garantire che la transizione venga applicata
+            void modalContent.offsetWidth; 
+
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }
+
+        function closeApartmentModal() {
+            const modalContent = apartmentModal.querySelector(':nth-child(1)');
+            
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                apartmentModal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }, 300); // 300ms, come la durata della transizione CSS
+        }
+        
+        // --- GESTIONE MOSTRA/NASCONDI CONTATTI ---
+        function toggleContactInfo() {
+            const isActive = contactInfoBox.classList.contains('active');
+            if (isActive) {
+                contactInfoBox.classList.remove('active');
+                showContactBtn.textContent = translations[currentLang].modal_show_contact;
+            } else {
+                contactInfoBox.classList.add('active');
+                showContactBtn.textContent = 'Nascondi Contatti';
+            }
+        }
+        
+        // --- GESTIONE DISCLAIMER ---
+        function showDisclaimer(event) {
+            event.preventDefault();
+            disclaimerModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeDisclaimerModal() {
+            disclaimerModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+        
+        // --- FUNZIONE DI TRADUZIONE ---
+        function updateContentLanguage() {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[currentLang][key];
+                    } else {
+                        element.textContent = translations[currentLang][key];
+                    }
+                }
+            });
+            
+            // Aggiorna il testo del bottone contatti
+            if (contactInfoBox.classList.contains('active')) {
+                showContactBtn.textContent = currentLang === 'it' ? 'Nascondi Contatti' : 'Hide Contact';
+            } else {
+                showContactBtn.textContent = translations[currentLang].modal_show_contact;
+            }
+            
+            // Ricarica le card per aggiornare badge e testo Disponibilità/Dettagli
+            if (apartmentsData.length > 0) {
+                 renderApartments();
+            } else if (loadingIndicator.classList.contains('hidden')) {
+                // Se non ci sono dati, aggiorna i messaggi di "Non trovato"
+                document.getElementById('no-featured-message').textContent = translations[currentLang].no_featured_found;
+                document.getElementById('no-apartments-message').textContent = translations[currentLang].no_apartments_found;
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            updateContentLanguage();
+            // Aggiorna i pulsanti di lingua
+            document.querySelectorAll('.lang-button').forEach(btn => {
+                btn.classList.remove('bg-sky-500', 'hover:bg-sky-600', 'bg-gray-600', 'hover:bg-gray-700');
+                if (btn.id === `lang-${lang}`) {
+                    btn.classList.add('bg-sky-500', 'hover:bg-sky-600');
+                } else {
+                    btn.classList.add('bg-gray-600', 'hover:bg-gray-700');
+                }
+            });
+        }
+        
+        // --- GESTIONE SCROLL TO TOP ---
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        const scrollFunction = () => {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                scrollToTopBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+                scrollToTopBtn.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                scrollToTopBtn.classList.remove('opacity-100', 'translate-y-0');
+                scrollToTopBtn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            }
+        };
+
+        window.onscroll = scrollFunction;
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+
+        // --- EVENT LISTENERS E INIZIALIZZAZIONE ---
+        document.getElementById('lang-it').addEventListener('click', () => setLanguage('it'));
+        document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+
+        // Caricamento iniziale
+        fetchApartmentsFromSheet();
+        setLanguage('it'); // Imposta la lingua iniziale e aggiorna i bottoni
+    </script>
+</body>
+</html>
