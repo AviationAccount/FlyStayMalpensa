@@ -6,21 +6,49 @@
     <title>FlyStay Malpensa - Il tuo soggiorno vicino all'Aeroporto</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for the map icon and general overrides */
-        .map-icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-            margin-right: 8px;
+        /* Definizione dei colori primari e accentati */
+        :root {
+            /* Blu/Navy per titoli e primary text (professionale) */
+            --color-primary: #1e293b; /* slate-800 */
+            /* Arancione brillante per CTA e accenti (visibilità) */
+            --color-accent: #f97316; /* orange-500 */
+            /* Un blu secondario per i link di navigazione */
+            --color-secondary-blue: #0ea5e9; /* sky-500 */
         }
 
-        /* NEW: Badge Styliing for Featured Apartments */
+        /* Stili Custom per applicare i colori */
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .border-primary { border-color: var(--color-primary); }
+        
+        .bg-accent { background-color: var(--color-accent); }
+        .hover\:bg-accent:hover { background-color: #f1690e; } /* Orange-600 */
+        .border-t-accent { border-top-color: var(--color-accent); }
+
+        .text-secondary-blue { color: var(--color-secondary-blue); }
+        .hover\:text-secondary-blue:hover { color: #0284c7; } /* sky-600 */
+        
+        /* Stile specifico per i pulsanti CTA (Call-to-Action) */
+        .btn-cta {
+            background-color: var(--color-accent);
+            color: white;
+            font-weight: 700;
+            border-radius: 9999px; /* rounded-full */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            transition: all 0.3s ease;
+        }
+        .btn-cta:hover {
+            background-color: #f1690e; /* Hover sul colore accent */
+            transform: scale(1.05);
+        }
+
+        /* Stile per i badge "In Evidenza" */
         .premium-badge {
             position: absolute;
             top: 12px;
             right: 12px;
-            background-color: #FFD700; /* Gold color for the medal */
-            color: #333;
+            background-color: var(--color-accent); 
+            color: var(--color-primary); 
             font-weight: bold;
             padding: 6px 10px;
             border-radius: 6px;
@@ -33,48 +61,47 @@
         .medal-icon {
             width: 18px;
             height: 18px;
-            fill: #333;
+            fill: var(--color-primary);
             margin-right: 6px;
         }
         
-        /* Modal gallery simple styling for demo */
-        #modal-image-gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        
-        /* New: Styling for the Contact Info box */
+        /* Stile Modal (non nel codice fornito, ma utile per coerenza) */
         .contact-info-box {
             transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out;
             overflow: hidden;
             max-height: 0;
             opacity: 0;
-            padding: 0 1rem; /* Initial zero padding horizontal only */
-            margin: 0; /* Initial zero margin */
+            padding: 0 1rem;
+            margin: 0;
         }
         .contact-info-box.active {
-            max-height: 200px; /* Sufficient height to show content */
+            max-height: 200px;
             opacity: 1;
             padding-top: 1rem; 
             padding-bottom: 1rem;
             margin-top: 1rem;
         }
+        .map-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            margin-right: 8px;
+        }
+
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 relative">
 
-    <header class="sticky top-0 z-50 bg-white shadow-md">
+    <header class="sticky top-0 z-50 bg-white shadow-lg">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-sky-600">FlyStay Malpensa</div>
+            <div class="text-2xl font-bold text-primary">FlyStay Malpensa</div>
             <div class="flex items-center space-x-4">
-                <a href="#apartments-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_apartments">Appartamenti</a>
-                <a href="#about-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_about">Chi Siamo</a>
-                <a href="#contact-section" class="text-gray-600 hover:text-sky-600 font-medium transition duration-300" data-translate="nav_contact">Contatti</a>
+                <a href="#apartments-section" class="text-gray-600 hover:text-secondary-blue font-medium transition duration-300" data-translate="nav_apartments">Appartamenti</a>
+                <a href="#about-section" class="text-gray-600 hover:text-secondary-blue font-medium transition duration-300" data-translate="nav_about">Chi Siamo</a>
+                <a href="#contact-section" class="text-gray-600 hover:text-secondary-blue font-medium transition duration-300" data-translate="nav_contact">Contatti</a>
                 
                 <div class="flex space-x-2 ml-4">
-                    <button id="lang-it" class="lang-button bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold py-1 px-2 rounded transition duration-300">IT</button>
+                    <button id="lang-it" class="lang-button bg-primary hover:bg-slate-700 text-white text-xs font-bold py-1 px-2 rounded transition duration-300">IT</button>
                     <button id="lang-en" class="lang-button bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-2 rounded transition duration-300">EN</button>
                 </div>
             </div>
@@ -89,27 +116,27 @@
             <div class="relative z-10 p-6">
                 <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-4 drop-shadow-lg" data-translate="hero_title">FlyStay Malpensa</h1>
                 <p class="text-xl md:text-2xl text-gray-200 mb-8 drop-shadow-md" data-translate="hero_subtitle">Il tuo soggiorno perfetto vicino all'aeroporto di Malpensa.</p>
-                <a href="#apartments-section" class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105" data-translate="explore_button">Esplora Appartamenti</a>
+                <a href="#apartments-section" class="inline-block btn-cta py-3 px-8 shadow-xl" data-translate="explore_button">Esplora Appartamenti</a>
             </div>
         </section>
         
         <section id="about-section" class="py-16 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center text-slate-800 mb-8" data-translate="about_title">Chi Siamo</h2>
-        <div class="max-w-4xl mx-auto text-lg text-gray-600 space-y-4">
-            <p data-translate="about_paragraph_1">Benvenuti su FlyStay Malpensa, la vostra soluzione ideale per un soggiorno confortevole e conveniente vicino all'aeroporto di Malpensa. Comprendiamo l'importanza di un riposo sereno prima o dopo un lungo viaggio, ed è per questo che ci impegniamo a offrire appartamenti accoglienti e ben attrezzati, pensati per soddisfare ogni vostra esigenza.</p>
-            <p data-translate="about_paragraph_2">La nostra missione è semplice: garantire un'esperienza senza stress, offrendo alloggi di qualità superiore con tutti i comfort moderni, in posizioni strategiche che permettono un facile accesso all'aeroporto e alle principali attrazioni della zona.</p>
-            <p data-translate="about_paragraph_3">Siamo qui per rendere il vostro viaggio il più piacevole possibile. Scegliete FlyStay Malpensa per un soggiorno indimenticabile!</p>
-        </div>
-    </div>
-</section>
-        
-        <section id="featured-apartments-section" class="py-16 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-slate-800 mb-2" data-translate="featured_title">✨ Soluzioni in Evidenza ✨</h2>
+                <h2 class="text-3xl font-bold text-center text-primary mb-8" data-translate="about_title">Chi Siamo</h2>
+                <div class="max-w-4xl mx-auto text-lg text-gray-600 space-y-4">
+                    <p data-translate="about_paragraph_1">Benvenuti su FlyStay Malpensa, la vostra soluzione ideale per un soggiorno confortevole e conveniente vicino all'aeroporto di Malpensa. Comprendiamo l'importanza di un riposo sereno prima o dopo un lungo viaggio, ed è per questo che ci impegniamo a offrire soluzioni accoglienti e ben attrezzate, pensati per soddisfare ogni vostra esigenza.</p>
+                    <p data-translate="about_paragraph_2">La nostra missione è semplice: garantire un'esperienza senza stress, offrendo alloggi di qualità superiore con tutti i comfort moderni, in posizioni strategiche che permettono un facile accesso all'aeroporto e alle principali attrazioni della zona.</p>
+                    <p data-translate="about_paragraph_3">Siamo qui per rendere il vostro viaggio il più piacevole possibile. Scegliete FlyStay Malpensa per un soggiorno indimenticabile!</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="featured-apartments-section" class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center text-primary mb-2" data-translate="featured_title">✨ Soluzioni in Evidenza ✨</h2>
                 <p class="text-center text-gray-500 mb-10" data-translate="featured_subtitle">Gli appartamenti PREMIUM sono la soluzione consigliada da noi di FlyStayMalpensa.</p>
                 
-                <div id="loading-indicator" class="text-center text-sky-600 font-semibold hidden" data-translate="loading_apartments">Caricamento appartamenti...</div>
+                <div id="loading-indicator" class="text-center text-secondary-blue font-semibold hidden" data-translate="loading_apartments">Caricamento appartamenti...</div>
                 <p id="no-featured-message" class="text-center text-gray-500 italic hidden mt-8" data-translate="no_featured_found">Nessun appartamento in evidenza al momento.</p>
 
                 <div id="featured-apartments-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -117,9 +144,9 @@
             </div>
         </section>
 
-        <section id="apartments-section" class="py-16 bg-gray-50">
+        <section id="apartments-section" class="py-16 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-slate-800 mb-10" data-translate="apartments_available">Tutte le Soluzioni Disponibili</h2>
+                 <h2 class="text-3xl font-bold text-center text-primary mb-10" data-translate="apartments_available">Tutte le Soluzioni Disponibili</h2>
                 
                 <p id="no-apartments-message" class="text-center text-gray-500 italic hidden mt-8" data-translate="no_apartments_found">Nessun altro appartamento trovato.</p>
 
@@ -128,48 +155,48 @@
             </div>
         </section>
         
-        <section id="reviews-section" class="py-16 bg-sky-50">
+        <section id="reviews-section" class="py-16 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-slate-800 mb-10" data-translate="reviews_title">Dicono di Noi</h2>
+                 <h2 class="text-3xl font-bold text-center text-primary mb-10" data-translate="reviews_title">Dicono di Noi</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-t-accent">
                         <p class="text-gray-600 italic mb-4" data-translate="review_text_1">Soggiorno fantastico! L'appartamento era pulitissimo e molto confortevole. Perfetto per chi ha bisogno di un punto d'appoggio vicino Malpensa.</p>
                         <p class="font-semibold text-slate-700" data-translate="review_user_1_name">Marco Rossi</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-t-accent">
                         <p class="text-gray-600 italic mb-4" data-translate="review_text_2">Ottima posizione e personale molto disponibile. Ho apprezzato la tranquillità e la comodità. Tornerò sicuramente!</p>
                         <p class="font-semibold text-slate-700" data-translate="review_user_2_name">Laura Bianchi</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-t-accent">
                         <p class="text-gray-600 italic mb-4" data-translate="review_text_3">Impeccable apartment and seamless check-in process. Highly recommend for anyone needing accommodation near Malpensa Airport.</p>
                         <p class="font-semibold text-slate-700" data-translate="review_user_3_name">John Doe</p>
                     </div>
                 </div>
                 <div class="text-center mt-10">
-                    <a href="#" class="text-sky-600 hover:text-sky-800 font-semibold transition duration-300" data-translate="view_all_reviews">Leggi tutte le recensioni</a>
+                    <a href="#" class="text-secondary-blue hover:text-sky-700 font-semibold transition duration-300" data-translate="view_all_reviews">Leggi tutte le recensioni</a>
                 </div>
             </div>
         </section>
 
         <section id="contact-section" class="py-16 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-translate="contact_title">Contatti Generali</h2>
+                 <h2 class="text-3xl font-bold text-primary mb-4" data-translate="contact_title">Contatti Generali</h2>
                 <p class="text-lg text-gray-600 mb-8" data-translate="contact_text">Hai domande o hai bisogno di assistenza generale? Non esitare a contattarci!</p>
                 <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
                     <div class="flex items-center text-xl text-slate-700">
                         <span class="font-semibold mr-2" data-translate="contact_email">Email:</span>
-                        <a href="mailto:info@flystaymalpensa.com" class="text-sky-600 hover:text-sky-800 font-medium">info@flystaymalpensa.com</a>
+                        <a href="mailto:info@flystaymalpensa.com" class="text-secondary-blue hover:text-sky-700 font-medium">info@flystaymalpensa.com</a>
                     </div>
                     <div class="flex items-center text-xl text-slate-700">
                         <span class="font-semibold mr-2" data-translate="contact_phone">Telefono:</span>
-                        <a href="tel:+3903311234567" class="text-sky-600 hover:text-sky-800 font-medium">+39 0331 1234567</a>
+                        <a href="tel:+3903311234567" class="text-secondary-blue hover:text-sky-700 font-medium">+39 0331 1234567</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-gray-800 text-white py-8">
+    <footer class="bg-primary text-white py-8">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p class="mb-4">© 2024 FlyStay Malpensa. <span data-translate="footer_rights">Tutti i diritti riservati.</span></p>
             <div class="space-x-4">
@@ -179,7 +206,7 @@
         </div>
     </footer>
 
-    <button id="scrollToTopBtn" class="fixed bottom-6 right-6 bg-sky-500 text-white p-3 rounded-full shadow-xl transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none hover:bg-sky-600">
+    <button id="scrollToTopBtn" class="fixed bottom-6 right-6 btn-cta p-3 rounded-full shadow-xl transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
@@ -187,15 +214,15 @@
     
     <div id="apartment-modal" class="fixed inset-0 z-[100] bg-black bg-opacity-75 flex items-center justify-center hidden transition-opacity duration-300" onclick="if(event.target === this) closeApartmentModal()">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4 transform transition-all duration-300 scale-95 opacity-0" 
-             style="transition: transform 0.3s ease-out, opacity 0.3s ease-out;" 
-             data-current-apartment-id="">
+            style="transition: transform 0.3s ease-out, opacity 0.3s ease-out;" 
+            data-current-apartment-id="">
             
             <div class="sticky top-0 bg-white p-4 border-b rounded-t-xl flex justify-between items-start z-10">
                 <div>
-                    <h2 id="modal-title" class="text-3xl font-bold text-slate-800">Nome Appartamento</h2>
-                    <p id="modal-price" class="text-xl text-sky-600 font-semibold mt-1">€/notte*</p>
+                    <h2 id="modal-title" class="text-3xl font-bold text-primary">Nome Appartamento</h2>
+                    <p id="modal-price" class="text-xl text-secondary-blue font-semibold mt-1">€/notte*</p>
                 </div>
-                <button onclick="closeApartmentModal()" class="text-gray-500 hover:text-gray-800 transition duration-300">
+                <button onclick="closeApartmentModal()" class="text-gray-500 hover:text-primary transition duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -208,25 +235,25 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
-                        <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_description_it_title">Descrizione (Italiano):</h3>
+                         <h3 class="text-xl font-semibold text-primary mb-2" data-translate="modal_description_it_title">Descrizione (Italiano):</h3>
                         <p id="modal-description-it" class="text-gray-600 leading-relaxed"></p>
                     </div>
                     <div>
-                        <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_description_en_title">Description (English):</h3>
+                         <h3 class="text-xl font-semibold text-primary mb-2" data-translate="modal_description_en_title">Description (English):</h3>
                         <p id="modal-description-en" class="text-gray-600 leading-relaxed"></p>
                     </div>
                 </div>
 
                 <div class="bg-gray-100 p-4 rounded-lg">
-                    <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_accessories_title">Accessori:</h3>
+                    <h3 class="text-xl font-semibold text-primary mb-2" data-translate="modal_accessories_title">Accessori:</h3>
                     <p id="modal-accessories" class="text-gray-700"></p>
                 </div>
                 
                 <div class="bg-gray-100 p-4 rounded-lg">
-                    <h3 class="text-xl font-semibold text-slate-700 mb-2" data-translate="modal_location_title">Posizione:</h3>
+                    <h3 class="text-xl font-semibold text-primary mb-2" data-translate="modal_location_title">Posizione:</h3>
                     <p id="modal-coordinates" class="text-gray-700 mb-3 text-sm"></p>
                     
-                    <a id="modal-map-link" href="#" target="_blank" class="inline-flex items-center text-sky-600 hover:text-sky-800 font-medium transition duration-300 hidden">
+                    <a id="modal-map-link" href="#" target="_blank" class="inline-flex items-center text-secondary-blue hover:text-sky-700 font-medium transition duration-300 hidden">
                         <svg class="map-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
@@ -238,18 +265,18 @@
                 <div class="text-center pt-4 border-t">
                     <p id="modal-availability-text" class="text-xl font-bold text-red-500 mb-4" data-translate="modal_availability_title">Disponibilità:</p>
                     
-                    <button id="show-contact-btn" onclick="toggleContactInfo()" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition duration-300" data-translate="modal_show_contact">Mostra Contatti Proprietario</button>
+                    <button id="show-contact-btn" onclick="toggleContactInfo()" class="inline-block btn-cta text-white font-bold py-3 px-8 text-lg shadow-lg" data-translate="modal_show_contact">Mostra Contatti Proprietario</button>
 
                     <div id="contact-info-box" class="contact-info-box border border-gray-200 bg-gray-50 rounded-lg">
-                        <p id="owner-name" class="text-xl font-bold mb-2 text-slate-700"></p> 
-                        <p class="text-sm font-medium mb-2 text-slate-700" data-translate="contact_owner_info">Contatti (per prenotazioni):</p>
+                         <p id="owner-name" class="text-xl font-bold mb-2 text-primary"></p> 
+                        <p class="text-sm font-medium mb-2 text-primary" data-translate="contact_owner_info">Contatti (per prenotazioni):</p>
                         <p class="text-lg font-semibold text-gray-700 mb-2">
                             <span data-translate="contact_email_label">Email:</span> 
-                            <a id="owner-email" href="" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank"></a>
+                            <a id="owner-email" href="" class="text-secondary-blue hover:text-sky-700 font-medium" target="_blank"></a>
                         </p>
-                         <p class="text-lg font-semibold text-gray-700">
+                           <p class="text-lg font-semibold text-gray-700">
                             <span data-translate="contact_phone_label">Telefono:</span> 
-                            <a id="owner-phone" href="" class="text-sky-600 hover:text-sky-800 font-medium" target="_blank"></a>
+                            <a id="owner-phone" href="" class="text-secondary-blue hover:text-sky-700 font-medium" target="_blank"></a>
                         </p>
                     </div>
 
@@ -261,16 +288,16 @@
     
     <div id="disclaimer-modal" class="fixed inset-0 z-[100] bg-black bg-opacity-75 flex items-center justify-center hidden" onclick="if(event.target === this) closeDisclaimerModal()">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 m-4">
-            <h2 class="text-2xl font-bold text-slate-800 mb-4" data-translate="disclaimer_title">Disclaimer</h2>
+             <h2 class="text-2xl font-bold text-primary mb-4" data-translate="disclaimer_title">Disclaimer</h2>
             <p class="text-gray-600 mb-4" data-translate="disclaimer_short_1">Le informazioni su questo sito sono fornite a scopo generale. FlyStay Malpensa si impegna per l'accuratezza, ma non garantisce la completezza o l'idoneità. L'affidamento su tali informazioni è a vostro rischio.</p>
             <p class="text-gray-600 mb-4" data-translate="disclaimer_short_2">Non saremo responsabili per eventuali perdite o danni indiretti. Collegamenti esterni non sono sotto il nostro controllo e non implicano approvazione.</p>
             <p class="text-gray-600 mb-4" data-translate="disclaimer_short_3">Ci impegniamo a mantenere il sito operativo, ma non siamo responsabili per interruzioni temporanee dovute a problemi tecnici fuori dal nostro controllo.</p>
-            <button onclick="closeDisclaimerModal()" class="mt-4 bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Chiudi</button>
+            <button onclick="closeDisclaimerModal()" class="mt-4 bg-primary hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Chiudi</button>
         </div>
     </div>
 
 
-    <script>
+   <script>
         // ***************************************************************
         // *** IL TUO LINK CSV PUBBLICATO È INSERITO QUI ***
         // ***************************************************************
