@@ -315,6 +315,9 @@
         // ***************************************************************
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8HIxIC8hvMJFpWGVnU7o_tXvxcLT2b8odkOJIvz_YP3XNgIRPzf6Y7HZFkyZMkKeUMDPl1oSi3z83/pub?output=csv'; 
 
+ // AGGIUNGI QUI IL CODICE PER DISABILITARE IL TASTO DESTRO
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
         let apartmentsData = []; 
 
         const apartmentsContainer = document.getElementById('apartments-container');
