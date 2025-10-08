@@ -120,14 +120,26 @@
             </div>
         </section>
         
-        <section id="about-section" class="py-16 bg-white">
+<section id="about-section" class="py-16 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-primary mb-8" data-translate="about_title">Chi Siamo</h2>
-                <div class="max-w-4xl mx-auto text-lg text-gray-600 space-y-4">
-                    <p data-translate="about_paragraph_1">Benvenuti su FlyStay Malpensa, la vostra soluzione ideale per un soggiorno confortevole e conveniente vicino all'aeroporto di Malpensa. Comprendiamo l'importanza di un riposo sereno prima o dopo un lungo viaggio, ed è per questo che ci impegniamo a offrire soluzioni accoglienti e ben attrezzate, pensati per soddisfare ogni vostra esigenza.</p>
-                    <p data-translate="about_paragraph_2">La nostra missione è semplice: garantire un'esperienza senza stress, offrendo alloggi di qualità superiore con tutti i comfort moderni, in posizioni strategiche che permettono un facile accesso all'aeroporto e alle principali attrazioni della zona.</p>
-                    <p data-translate="about_paragraph_3">Siamo qui per rendere il vostro viaggio il più piacevole possibile. Scegliete FlyStay Malpensa per un soggiorno indimenticabile!</p>
+                <h2 class="text-3xl font-bold text-center text-primary mb-10" data-translate="about_title">Chi Siamo</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    
+                    <div class="text-lg text-gray-600 space-y-4">
+                        <p data-translate="about_paragraph_1">Benvenuti su FlyStay Malpensa, la vostra soluzione ideale per un soggiorno confortevole e conveniente vicino all'aeroporto di Malpensa. Comprendiamo l'importanza di un riposo sereno prima o dopo un lungo viaggio, ed è per questo che ci impegniamo a offrire appartamenti accoglienti e ben attrezzati, pensati per soddisfare ogni vostra esigenza.</p>
+                        <p data-translate="about_paragraph_2">La nostra missione è semplice: garantire un'esperienza senza stress, offrendo alloggi di qualità superiore con tutti i comfort moderni, in posizioni strategiche che permettono un facile accesso all'aeroporto e alle principali attrazioni della zona.</p>
+                        <p data-translate="about_paragraph_3">Siamo qui per rendere il vostro viaggio il più piacevole possibile. Scegliete FlyStay Malpensa per un soggiorno indimenticabile!</p>
+                    </div>
+                    
+<div class="relative w-full"> <img src="https://i.ibb.co/Q75v1nyp/Gemini-Generated-Image-6nffdj6nffdj6nff.png" 
+                             alt="Immagine dell'aeroporto di Malpensa che simboleggia FlyStay" 
+                             class="rounded-xl shadow-2xl w-200 max-h-200 object-cover transform hover:scale-[1.02] transition duration-500 ease-in-out">
+                        <div class="absolute inset-0 bg-primary opacity-5 rounded-xl"></div>
+                    </div>
+                    
                 </div>
+                
             </div>
         </section>
         
@@ -682,9 +694,32 @@
             return apartmentCard;
         }
 
-        function toggleContactInfo() {
-            contactInfoBox.classList.toggle('active');
-        }
+function toggleContactInfo() {
+    contactInfoBox.classList.toggle('active');
+    
+    const isActive = contactInfoBox.classList.contains('active');
+    
+    // Cambia il testo del pulsante a seconda dello stato (gestione traduzione IT/EN)
+    const currentLangTranslations = translations[currentLang];
+    if (isActive) {
+        // Applica testo "Nascondi"
+        showContactBtn.textContent = currentLangTranslations['modal_show_contact'].replace('Mostra', 'Nascondi').replace('Show', 'Hide'); 
+    } else {
+        // Applica testo "Mostra"
+        showContactBtn.textContent = currentLangTranslations['modal_show_contact'];
+    }
+
+    // NUOVO: Esegui lo scroll se il box è stato appena aperto
+    if (isActive) {
+        // Usiamo un piccolo ritardo per permettere alla transizione CSS (max-height) di iniziare
+        setTimeout(() => {
+            showContactBtn.scrollIntoView({ 
+                behavior: 'smooth', // Animazione fluida dello scroll
+                block: 'start'      // Allinea l'inizio del pulsante (o il box sottostante) in alto
+            });
+        }, 300); // Ritardo in millisecondi (300ms, circa la durata della tua transizione)
+    }
+}
 
         function showApartmentDetails(apartment, shouldShowModal = true) {
             // Logica per popolare il modale
