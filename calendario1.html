@@ -1,79 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Calendario Disponibilità Appartamento 1</title>
+<title>Calendario Disponibilità Appartamento</title>
 <meta charset='utf-8' />
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css' rel='stylesheet' />
 
 <style>
-  /* ---------------------------------- */
-  /* STILI GENERALI E TITOLI */
-  /* ---------------------------------- */
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fa;
-  }
-
+  /* [STILI CSS OME PRIMA] */
+  body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
   #calendar-container {
-    /* 🎯 MODIFICA QUI PER RENDERE IL CALENDARIO PIÙ PICCOLO 🎯 */
-    max-width: 600px; /* Ridotto da 1000px a 600px */
-    /* ---------------------------------------------------- */
-    margin: 40px auto;
-    padding: 30px;
-    border: 1px solid #dee2e6;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background-color: white;
+    max-width: 600px; margin: 40px auto; padding: 30px; border: 1px solid #dee2e6;
+    border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); background-color: white;
   }
-
   .header-personalizzato {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #e9ecef;
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;
+    padding-bottom: 15px; border-bottom: 2px solid #e9ecef;
   }
-  /* Riduci la dimensione del titolo per spazi più stretti */
-  .header-personalizzato h1 {
-    font-size: 24px; 
-    font-weight: 700;
-    color: #343a40;
-    margin: 0;
-  }
-
-  /* ---------------------------------- */
-  /* STILI LOGO */
-  /* ---------------------------------- */
-  .logo-calendario {
-    height: 40px; /* Riduci anche il logo per coerenza */
-    width: auto;
-    border-radius: 4px;
-  }
-  
-  /* ---------------------------------- */
-  /* STILI FULLCALENDAR (DISPONIBILITÀ) */
-  /* ---------------------------------- */
+  .header-personalizzato h1 { font-size: 24px; font-weight: 700; color: #343a40; margin: 0; }
+  .logo-calendario { height: 40px; width: auto; border-radius: 4px; }
   .fc-event-libero {
-    background-color: #007bff;
-    border-color: #0069d9;
-    color: white;
-    font-weight: 600;
-    font-size: 11px; /* Riduci la dimensione del testo evento per spazi più stretti */
+    background-color: #007bff; border-color: #0069d9; color: white;
+    font-weight: 600; font-size: 11px;
   }
   .fc-event-occupato {
-    background-color: #dc3545;
-    border-color: #c82333;
-    color: white;
-    font-weight: 600;
-    font-size: 11px; /* Riduci la dimensione del testo evento per spazi più stretti */
+    background-color: #dc3545; border-color: #c82333; color: white;
+    font-weight: 600; font-size: 11px;
   }
-
-  .fc-daygrid-event, .fc-toolbar-title {
-    font-family: 'Poppins', sans-serif;
-  }
+  .fc-daygrid-event, .fc-toolbar-title { font-family: 'Poppins', sans-serif; }
 </style>
 
 </head>
@@ -92,8 +47,103 @@
 
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
 <script>
+  // 🎯 IL TUO LINK CSV 🎯
+  const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQUtGTs-fPVBVcJmFGRMer3jMBN7nR_zK5um9QV-RtEXaO1-WvEAr97EwgZX84izniisaFAxOWgiFA0/pub?output=csv'; 
+  
+  // 🎯 L'ID della riga da cui prelevare i dati
+  const APPARTAMENTO_ID_DA_VISUALIZZARE = '1'; 
+
   document.addEventListener('DOMContentLoaded', function() {
+    
+    // Funzione per convertire la data di fine da INCLUSA a ESCLUSA
+    function addDayToDate(dateString) {
+        if (!dateString) return null;
+        const date = new Date(dateString + 'T00:00:00');
+        date.setDate(date.getDate() + 1); 
+        return date.toISOString().split('T')[0];
+    }
+    
+    // Funzione che carica il CSV e trasforma la riga in eventi del calendario
+    function fetchEventsFromCSV(fetchInfo, successCallback, failureCallback) {
+        // 🎯 FIX ANTI-CACHE: Aggiunge un timestamp come parametro di query
+        const cacheBusterUrl = GOOGLE_SHEET_CSV_URL + '&t=' + new Date().getTime();
+
+        fetch(cacheBusterUrl)
+            .then(response => {
+                if (!response.ok) {
+                    console.error("ERRORE DI RETE/LINK:", response.status, response.statusText);
+                    throw new Error('Errore nel caricamento del CSV. (Controlla console per dettagli)');
+                }
+                return response.text();
+            })
+            .then(csvText => {
+                const rows = csvText.split(/\r?\n/).filter(r => r.trim() !== '');
+                
+                let targetRow = null;
+                for (let i = 1; i < rows.length; i++) { 
+                    const columns = rows[i].split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+                    
+                    if (columns[0] === APPARTAMENTO_ID_DA_VISUALIZZARE) {
+                        targetRow = columns;
+                        break;
+                    }
+                }
+
+                if (!targetRow) {
+                    console.error(`ID Appartamento ${APPARTAMENTO_ID_DA_VISUALIZZARE} non trovato nel CSV.`);
+                    successCallback([]); 
+                    return;
+                }
+
+                const events = [];
+                const dataStartColumnIndex = 2; 
+
+                for (let i = dataStartColumnIndex; i < targetRow.length; i += 3) {
+                    const status = targetRow[i] ? targetRow[i].toLowerCase() : '';
+                    const start = targetRow[i+1] || '';
+                    const end = targetRow[i+2] || '';
+
+                    if (start && end && status) {
+                        const exclusiveEnd = addDayToDate(end);
+                        let title;
+                        let classNames;
+
+                        if (status === 'libero') {
+                            title = 'LIBERO';
+                            classNames = ['fc-event-libero'];
+                        } else if (status === 'occupato') {
+                            title = 'OCCUPATO';
+                            classNames = ['fc-event-occupato'];
+                        } else {
+                            continue;
+                        }
+
+                        events.push({
+                            title: title,
+                            start: start,
+                            end: exclusiveEnd, 
+                            classNames: classNames,
+                            allDay: true
+                        });
+                    }
+                }
+                
+                console.log("Eventi generati da FullCalendar:", events); 
+                successCallback(events);
+            })
+            .catch(error => {
+                console.error('ERRORE CRITICO: Impossibile elaborare i dati CSV.', error);
+                failureCallback(error);
+            });
+    }
+
+    // --- Configurazione Iniziale del Calendario ---
     var calendarEl = document.getElementById('calendar-disponibilita');
+    
+    // Impedisce il click con tasto destro sul contenitore
+    document.getElementById('calendar-container').oncontextmenu = function(e) {
+        e.preventDefault(); 
+    };
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
@@ -106,37 +156,8 @@
         right: 'dayGridMonth'
       },
       
-      // =======================================================
-      // 🎯 INSERISCI QUI LE TUE DISPONIBILITÀ 🎯
-      // =======================================================
-      events: [
-        {
-          title: 'LIBERO', 
-          start: '2025-10-15',
-          end: '2025-10-25', 
-          classNames: ['fc-event-libero'] 
-        },
-        {
-          title: 'OCCUPATO',
-          start: '2025-11-01',
-          end: '2025-11-10', 
-          classNames: ['fc-event-occupato']
-        },
-        {
-          title: 'LIBERO',
-          start: '2025-12-05',
-          end: '2025-12-12', 
-          classNames: ['fc-event-libero']
-        },
-        {
-          title: 'OCCUPATO',
-          start: '2025-12-24', 
-          end: '2025-12-28', 
-          classNames: ['fc-event-occupato']
-        }
-      ]
-      // =======================================================
-      
+      // SOURCE DINAMICA: Punta alla funzione che legge il CSV
+      events: fetchEventsFromCSV
     });
 
     calendar.render();
