@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calendario Disponibilità Appartamento 1</title>
+<meta charset='utf-8' />
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css' rel='stylesheet' />
+
+<style>
+  /* ---------------------------------- */
+  /* STILI GENERALI E TITOLI */
+  /* ---------------------------------- */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+  }
+
+  #calendar-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: white;
+  }
+
+  .header-personalizzato {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .header-personalizzato h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #343a40;
+    margin: 0;
+  }
+
+  /* ---------------------------------- */
+  /* STILI LOGO */
+  /* ---------------------------------- */
+  .logo-calendario {
+    height: 50px;
+    width: auto;
+    border-radius: 4px;
+  }
+  
+  /* ---------------------------------- */
+  /* STILI FULLCALENDAR (DISPONIBILITÀ) */
+  /* ---------------------------------- */
+  .fc-event-libero {
+    background-color: #007bff; /* Blu accattivante */
+    border-color: #0069d9;
+    color: white;
+    font-weight: 600;
+  }
+  .fc-event-occupato {
+    background-color: #dc3545; /* Rosso */
+    border-color: #c82333;
+    color: white;
+    font-weight: 600;
+  }
+
+  /* Modifica l'intestazione del mese per il font */
+  .fc-daygrid-event, .fc-toolbar-title {
+    font-family: 'Poppins', sans-serif;
+  }
+</style>
+
+</head>
+<body>
+
+<div id='calendar-container'>
+  
+  <div class="header-personalizzato">
+    <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/testing-logo-design-template-ce84480d61b3db9a8e1522a99875832f_screen.jpg?ts=1732644069" alt="Logo Proprietà" class="logo-calendario" />
+    <h1>Disponibilità - Appartamento 1</h1>
+  </div>
+  
+  <div id='calendar-disponibilita'></div>
+  
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar-disponibilita');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'it',
+      displayEventTime: false,
+      
+      // 🎯 RIPRISTINO TOOLBAR DI NAVIGAZIONE 🎯
+      // Questo definisce la posizione dei pulsanti
+      headerToolbar: {
+        left: 'prev,next today', // Pulsanti "precedente", "successivo", "oggi"
+        center: 'title',         // Titolo del mese
+        right: 'dayGridMonth'    // (Opzionale) Bottone per la vista a mese
+      },
+      
+      // =======================================================
+      // 🎯 INSERISCI QUI LE TUE DISPONIBILITÀ 🎯
+      // =======================================================
+      events: [
+        // ESEMPIO 1: Periodo Libero (Blu)
+        {
+          title: 'LIBERO', 
+          start: '2025-10-15',
+          end: '2025-10-25', 
+          classNames: ['fc-event-libero'] 
+        },
+        
+        // ESEMPIO 2: Periodo Occupato (Rosso)
+        {
+          title: 'OCCUPATO',
+          start: '2025-11-01',
+          end: '2025-11-10', 
+          classNames: ['fc-event-occupato']
+        },
+        
+        // ESEMPIO 3: Settimana Libera
+        {
+          title: 'LIBERO',
+          start: '2025-12-05',
+          end: '2025-12-12', 
+          classNames: ['fc-event-libero']
+        },
+        
+        // ESEMPIO 4: Natale Occupato
+        {
+          title: 'OCCUPATO',
+          start: '2025-12-24', 
+          end: '2025-12-28', 
+          classNames: ['fc-event-occupato']
+        }
+      ]
+      // =======================================================
+      
+    });
+
+    calendar.render();
+  });
+</script>
+
+</body>
+</html>
