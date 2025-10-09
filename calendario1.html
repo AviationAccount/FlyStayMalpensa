@@ -17,7 +17,9 @@
   }
 
   #calendar-container {
-    max-width: 1000px;
+    /* 🎯 MODIFICA QUI PER RENDERE IL CALENDARIO PIÙ PICCOLO 🎯 */
+    max-width: 600px; /* Ridotto da 1000px a 600px */
+    /* ---------------------------------------------------- */
     margin: 40px auto;
     padding: 30px;
     border: 1px solid #dee2e6;
@@ -34,9 +36,9 @@
     padding-bottom: 15px;
     border-bottom: 2px solid #e9ecef;
   }
-
+  /* Riduci la dimensione del titolo per spazi più stretti */
   .header-personalizzato h1 {
-    font-size: 28px;
+    font-size: 24px; 
     font-weight: 700;
     color: #343a40;
     margin: 0;
@@ -46,7 +48,7 @@
   /* STILI LOGO */
   /* ---------------------------------- */
   .logo-calendario {
-    height: 50px;
+    height: 40px; /* Riduci anche il logo per coerenza */
     width: auto;
     border-radius: 4px;
   }
@@ -55,19 +57,20 @@
   /* STILI FULLCALENDAR (DISPONIBILITÀ) */
   /* ---------------------------------- */
   .fc-event-libero {
-    background-color: #007bff; /* Blu accattivante */
+    background-color: #007bff;
     border-color: #0069d9;
     color: white;
     font-weight: 600;
+    font-size: 11px; /* Riduci la dimensione del testo evento per spazi più stretti */
   }
   .fc-event-occupato {
-    background-color: #dc3545; /* Rosso */
+    background-color: #dc3545;
     border-color: #c82333;
     color: white;
     font-weight: 600;
+    font-size: 11px; /* Riduci la dimensione del testo evento per spazi più stretti */
   }
 
-  /* Modifica l'intestazione del mese per il font */
   .fc-daygrid-event, .fc-toolbar-title {
     font-family: 'Poppins', sans-serif;
   }
@@ -79,7 +82,7 @@
 <div id='calendar-container'>
   
   <div class="header-personalizzato">
-    <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/testing-logo-design-template-ce84480d61b3db9a8e1522a99875832f_screen.jpg?ts=1732644069" alt="Logo Proprietà" class="logo-calendario" />
+    <img src="URL_DEL_TUO_LOGO_QUI" alt="Logo Proprietà" class="logo-calendario" />
     <h1>Disponibilità - Appartamento 1</h1>
   </div>
   
@@ -97,43 +100,34 @@
       locale: 'it',
       displayEventTime: false,
       
-      // 🎯 RIPRISTINO TOOLBAR DI NAVIGAZIONE 🎯
-      // Questo definisce la posizione dei pulsanti
       headerToolbar: {
-        left: 'prev,next today', // Pulsanti "precedente", "successivo", "oggi"
-        center: 'title',         // Titolo del mese
-        right: 'dayGridMonth'    // (Opzionale) Bottone per la vista a mese
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth'
       },
       
       // =======================================================
       // 🎯 INSERISCI QUI LE TUE DISPONIBILITÀ 🎯
       // =======================================================
       events: [
-        // ESEMPIO 1: Periodo Libero (Blu)
         {
           title: 'LIBERO', 
           start: '2025-10-15',
           end: '2025-10-25', 
           classNames: ['fc-event-libero'] 
         },
-        
-        // ESEMPIO 2: Periodo Occupato (Rosso)
         {
           title: 'OCCUPATO',
           start: '2025-11-01',
           end: '2025-11-10', 
           classNames: ['fc-event-occupato']
         },
-        
-        // ESEMPIO 3: Settimana Libera
         {
           title: 'LIBERO',
           start: '2025-12-05',
           end: '2025-12-12', 
           classNames: ['fc-event-libero']
         },
-        
-        // ESEMPIO 4: Natale Occupato
         {
           title: 'OCCUPATO',
           start: '2025-12-24', 
